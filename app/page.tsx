@@ -1,3 +1,7 @@
+import Link from "next/link";
+
+const forkedTowerHref = "/events/forked-tower";
+
 const upcomingEvents = [
   {
     name: "LunarCon Panel Block",
@@ -51,6 +55,10 @@ export default function Home() {
             A simple home base for keeping track of notable Final Fantasy XIV
             community events, tournaments, conventions, and fan gatherings.
           </p>
+          <p className="mt-5 max-w-2xl text-sm leading-6 text-cyan-100/80">
+            Prototype behavior: select any event below to open a realistic Forked
+            Tower planning example.
+          </p>
         </section>
 
         <section aria-labelledby="upcoming-events" className="flex-1">
@@ -68,22 +76,29 @@ export default function Home() {
 
           <ol className="grid gap-4">
             {upcomingEvents.map((event) => (
-              <li
-                key={event.name}
-                className="rounded-3xl border border-white/10 bg-slate-950/70 p-6 transition hover:border-cyan-200/50 hover:bg-slate-900"
-              >
-                <article className="grid gap-4 md:grid-cols-[14rem_1fr] md:items-start">
-                  <div>
-                    <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-200">
-                      {event.date}
-                    </p>
-                    <p className="mt-2 text-sm text-slate-400">{event.organizer}</p>
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-semibold text-white">{event.name}</h3>
-                    <p className="mt-3 leading-7 text-slate-300">{event.description}</p>
-                  </div>
-                </article>
+              <li key={event.name}>
+                <Link
+                  href={forkedTowerHref}
+                  className="group block rounded-3xl border border-white/10 bg-slate-950/70 p-6 transition hover:-translate-y-0.5 hover:border-cyan-200/50 hover:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-200 focus:ring-offset-2 focus:ring-offset-[#090b16]"
+                >
+                  <article className="grid gap-4 md:grid-cols-[14rem_1fr] md:items-start">
+                    <div>
+                      <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-200">
+                        {event.date}
+                      </p>
+                      <p className="mt-2 text-sm text-slate-400">{event.organizer}</p>
+                    </div>
+                    <div>
+                      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                        <h3 className="text-2xl font-semibold text-white">{event.name}</h3>
+                        <span className="shrink-0 rounded-full border border-cyan-200/30 bg-cyan-200/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-100 transition group-hover:bg-cyan-200/20">
+                          View plan
+                        </span>
+                      </div>
+                      <p className="mt-3 leading-7 text-slate-300">{event.description}</p>
+                    </div>
+                  </article>
+                </Link>
               </li>
             ))}
           </ol>
