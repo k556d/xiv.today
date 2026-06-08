@@ -1,38 +1,38 @@
 const upcomingEvents = [
   {
-    name: "LunarCon",
-    date: "June 20, 2026",
+    name: "LunarCon Panel Block",
+    date: "Today, June 8, 2026 · 10:00 UTC",
     organizer: "Player-run convention",
     description:
-      "A large in-game convention format with concerts, panels, venue tours, contests, and community showcases.",
+      "A morning panel slot for community talks, venue previews, contests, and convention announcements.",
   },
   {
-    name: "MogTalk World Race Coverage",
-    date: "July 8, 2026",
+    name: "MogTalk Raid Roundtable",
+    date: "Today, June 8, 2026 · 13:00 UTC",
     organizer: "MogTalk",
     description:
-      "Community broadcast coverage following raid teams as they progress through a new high-end encounter race.",
+      "A midday community broadcast discussing raid preparation, progression stories, and team expectations.",
   },
   {
     name: "Crystalline Conflict Community Cup",
-    date: "August 15, 2026",
+    date: "Today, June 8, 2026 · 16:00 UTC",
     organizer: "PvP community",
     description:
-      "An organized tournament spotlighting Crystalline Conflict teams, casters, brackets, and match streams.",
+      "An afternoon tournament block spotlighting Crystalline Conflict teams, casters, brackets, and match streams.",
   },
   {
     name: "FFXIV Art Party",
-    date: "September 12, 2026",
+    date: "Today, June 8, 2026 · 19:00 UTC",
     organizer: "Artist community",
     description:
-      "A social gathering where artists draw player characters, trade sketches, and share finished pieces online.",
+      "An evening social gathering where artists draw player characters, trade sketches, and share finished pieces online.",
   },
   {
     name: "Fan Festival Watch Party",
-    date: "January 9, 2027",
+    date: "Today, June 8, 2026 · 22:00 UTC",
     organizer: "Local communities",
     description:
-      "Player-organized watch parties for keynote reveals, cosplay showcases, concerts, and live-letter speculation.",
+      "A late watch party for keynote highlights, cosplay showcases, concert clips, and live-letter speculation.",
   },
 ];
 
@@ -63,7 +63,7 @@ export default function Home() {
                 Upcoming events
               </h2>
             </div>
-            <p className="text-sm text-slate-400">Example community event data</p>
+            <p className="text-sm text-slate-400">Example events for today</p>
           </div>
 
           <ol className="grid gap-4">
