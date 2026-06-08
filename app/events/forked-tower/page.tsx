@@ -5,102 +5,102 @@ const parties = [
     name: "Aster",
     focus: "North-west platform · opener assignments",
     roster: [
-      ["Shield", "Warrior", "Rhalen Stormward"],
+      ["Tank", "Warrior", "Rhalen Stormward"],
       ["Healer", "Sage", "Minae Solfaire"],
       ["Healer", "White Mage", "Talia Moonbloom"],
       ["Melee", "Dragoon", "Kaito Ashenstar"],
       ["Melee", "Viper", "Nyx Valeriant"],
       ["Physical Ranged", "Bard", "Pipin Whistlewind"],
       ["Caster", "Pictomancer", "Aurelia Inkheart"],
-      ["Caster", "Black Mage", "Orion Duskwick"],
+      ["Tank", "Gunbreaker", "Orion Duskwick"],
     ],
   },
   {
     name: "Beryl",
     focus: "North platform · add control",
     roster: [
-      ["Shield", "Paladin", "Cedric Dawnblade"],
+      ["Tank", "Paladin", "Cedric Dawnblade"],
       ["Healer", "Scholar", "Luna Nymwright"],
       ["Healer", "Astrologian", "Seren Starfall"],
       ["Melee", "Samurai", "Hanae Redwillow"],
       ["Melee", "Reaper", "Varric Gravesong"],
       ["Physical Ranged", "Machinist", "Tobin Gearhart"],
       ["Caster", "Summoner", "Ember Foxglove"],
-      ["Caster", "Red Mage", "Lucien Roseveil"],
+      ["Tank", "Dark Knight", "Lucien Roseveil"],
     ],
   },
   {
     name: "Cobalt",
     focus: "North-east platform · interrupt calls",
     roster: [
-      ["Shield", "Dark Knight", "Maelis Nightforge"],
+      ["Tank", "Dark Knight", "Maelis Nightforge"],
       ["Healer", "White Mage", "Iris Cloudwater"],
       ["Healer", "Sage", "Veda Brightneedle"],
       ["Melee", "Monk", "Riku Ironpalm"],
       ["Melee", "Ninja", "Sable Quickstep"],
       ["Physical Ranged", "Dancer", "Faye Sunspoke"],
       ["Caster", "Pictomancer", "Momo Prismleaf"],
-      ["Caster", "Black Mage", "Dorian Voidquill"],
+      ["Tank", "Warrior", "Dorian Voidquill"],
     ],
   },
   {
     name: "Dawn",
     focus: "South-east platform · tower soaks",
     roster: [
-      ["Shield", "Gunbreaker", "Bram Triggerfall"],
+      ["Tank", "Gunbreaker", "Bram Triggerfall"],
       ["Healer", "Astrologian", "Noelle Skyscribe"],
       ["Healer", "Scholar", "Perrin Tomevale"],
       ["Melee", "Viper", "Zara Twinstrike"],
       ["Melee", "Dragoon", "Elios Wyverncall"],
       ["Physical Ranged", "Bard", "Clover Highnote"],
       ["Caster", "Red Mage", "Sylas Vermillion"],
-      ["Caster", "Summoner", "Nia Carbuncle"],
+      ["Tank", "Paladin", "Nia Carbuncle"],
     ],
   },
   {
     name: "Ember",
     focus: "South platform · rescue and recovery",
     roster: [
-      ["Shield", "Warrior", "Garrick Oakbreaker"],
+      ["Tank", "Warrior", "Garrick Oakbreaker"],
       ["Healer", "Sage", "Althea Noulith"],
       ["Healer", "White Mage", "Marin Lilybell"],
       ["Melee", "Reaper", "Cyrus Blackthorn"],
       ["Melee", "Samurai", "Renji Silverreed"],
       ["Physical Ranged", "Machinist", "Poppy Brassbolt"],
       ["Caster", "Black Mage", "Vesper Coalheart"],
-      ["Caster", "Pictomancer", "Juniper Palette"],
+      ["Tank", "Gunbreaker", "Juniper Palette"],
     ],
   },
   {
     name: "Frost",
     focus: "South-west platform · flex replacements",
     roster: [
-      ["Shield", "Paladin", "Leontius Lightguard"],
+      ["Tank", "Paladin", "Leontius Lightguard"],
       ["Healer", "Scholar", "Edda Codexborn"],
       ["Healer", "Astrologian", "Siona Celestine"],
       ["Melee", "Ninja", "Tatsu Shadowfern"],
       ["Melee", "Monk", "Mira Stonefist"],
       ["Physical Ranged", "Dancer", "Lottie Ribbonstep"],
       ["Caster", "Summoner", "Rhea Egiwhisper"],
-      ["Caster", "Red Mage", "Theo Scarlet"],
+      ["Tank", "Dark Knight", "Theo Scarlet"],
     ],
   },
 ];
 
 const timeline = [
   ["19:00", "Raid lead opens voice lobby, confirms 48 signups, reserves, ciphers, and knowledge level 20 access."],
-  ["19:10", "Six party leads split groups, post markers, and confirm each party has one tank and two healers."],
+  ["19:10", "Six party leads split groups, post markers, and confirm each party has two tanks and two healers."],
   ["19:20", "Instance scout calls a fresh South Horn. Players enter, sync parties, and gather at the pavilion."],
   ["19:35", "Auroral Mirage window: everyone checks food, potions, phantom actions, and right-of-entry status."],
   ["19:40", "Forked Tower pull. First attempt is treated as a UI-realistic planned event, not a guaranteed clear."],
 ];
 
 const roleSummary = [
-  ["Tanks", "6", "One per party for boss positioning, busters, add pickup, and emergency mitigation calls."],
+  ["Tanks", "12", "Two per party for boss positioning, busters, add pickup, and emergency mitigation calls."],
   ["Healers", "12", "Two per party for raidwide recovery, limited-raise triage, shields, and platform stability."],
   ["Melee DPS", "12", "Two per party for burst windows, priority target damage, and close-range mechanic coverage."],
   ["Physical ranged DPS", "6", "One per party for mobile uptime, mitigation support, and movement-heavy assignments."],
-  ["Casters", "12", "Two per party for sustained damage, raise-capable coverage where available, and burst planning."],
+  ["Casters", "6", "One per party for sustained damage, raise-capable coverage where available, and burst planning."],
 ];
 
 export default function ForkedTowerEventPage() {
@@ -135,11 +135,15 @@ export default function ForkedTowerEventPage() {
             </div>
             <div>
               <dt className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Scale</dt>
-              <dd className="mt-1 text-xl font-semibold text-white">48 players · 6 parties</dd>
+              <dd className="mt-1 text-xl font-semibold text-white">48 players · 6 full parties</dd>
             </div>
             <div>
               <dt className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Status</dt>
               <dd className="mt-1 text-xl font-semibold text-emerald-200">Ready check pending</dd>
+            </div>
+            <div>
+              <dt className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">PF password</dt>
+              <dd className="mt-1 font-mono text-3xl font-bold tracking-[0.18em] text-pink-100">0420</dd>
             </div>
           </dl>
         </section>
@@ -155,6 +159,17 @@ export default function ForkedTowerEventPage() {
         </section>
 
         <section className="grid gap-6 lg:grid-cols-[0.75fr_1.25fr]">
+          <article className="rounded-[2rem] border border-pink-200/20 bg-pink-950/30 p-6 shadow-xl shadow-pink-950/20">
+            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-pink-200">Party Finder access</p>
+            <h2 className="mt-3 text-3xl font-bold text-white">Password: <span className="font-mono tracking-[0.16em] text-pink-100">0420</span></h2>
+            <p className="mt-4 leading-7 text-slate-300">
+              The organizer will list the first recruitment party in FFXIV Party
+              Finder with this four-digit password. Join that listing first, then
+              wait for party leads to distribute players into the six planned
+              groups before entering the Occult Crescent instance.
+            </p>
+          </article>
+
           <article className="rounded-[2rem] border border-white/10 bg-slate-950/75 p-6">
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-200">Run timeline</p>
             <h2 className="mt-3 text-3xl font-bold text-white">Tonight&apos;s plan</h2>
@@ -173,7 +188,7 @@ export default function ForkedTowerEventPage() {
             <h2 className="mt-3 text-3xl font-bold text-white">Balanced, readable, and flexible</h2>
             <p className="mt-4 leading-7 text-slate-300">
               Forked Tower parties can be flexible, but this mock setup uses a familiar
-              one-tank, two-healer, five-DPS structure in each group. That makes party
+              two-tank, two-healer, four-DPS structure in each group. That makes party
               health easy to scan, gives every platform dedicated recovery, and keeps
               assignments simple while the UI is still being prototyped.
             </p>
