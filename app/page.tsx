@@ -2,6 +2,8 @@ import Link from "next/link";
 import { db } from "@/db";
 import { events } from "@/db/schema";
 
+export const dynamic = "force-dynamic";
+
 const forkedTowerHref = "/events/forked-tower";
 
 export default async function Home() {
