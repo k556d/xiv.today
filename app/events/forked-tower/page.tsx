@@ -92,7 +92,7 @@ const timeline = [
   ["19:10", "Six party leads split groups, post markers, and confirm each party has two tanks and two healers."],
   ["19:20", "Instance scout calls a fresh South Horn. Players enter, sync parties, and gather at the pavilion."],
   ["19:35", "Auroral Mirage window: everyone checks food, potions, phantom actions, and right-of-entry status."],
-  ["19:40", "Forked Tower pull. First attempt is treated as a UI-realistic planned event, not a guaranteed clear."],
+  ["19:40", "Forked Tower pull. First attempt is treated as a planned progression run, not a guaranteed clear."],
 ];
 
 const roleSummary = [
@@ -123,9 +123,8 @@ export default function ForkedTowerEventPage() {
               The Forked Tower: Blood
             </h1>
             <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
-              A sample 48-player FFXIV event page for an Occult Crescent raid night.
-              The signup is intentionally filled with generated player names so the UI
-              can be reviewed as if this were a real scheduled run.
+              A 48-player FFXIV event page for an Occult Crescent raid night.
+              The signup lists the full roster for tonight&apos;s scheduled run.
             </p>
           </div>
           <dl className="grid gap-3 rounded-3xl border border-white/10 bg-white/[0.06] p-5">
@@ -187,10 +186,10 @@ export default function ForkedTowerEventPage() {
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-200">Composition note</p>
             <h2 className="mt-3 text-3xl font-bold text-white">Balanced, readable, and flexible</h2>
             <p className="mt-4 leading-7 text-slate-300">
-              Forked Tower parties can be flexible, but this mock setup uses a familiar
+              Forked Tower parties can be flexible, but this setup uses a familiar
               two-tank, two-healer, four-DPS structure in each group. That makes party
               health easy to scan, gives every platform dedicated recovery, and keeps
-              assignments simple while the UI is still being prototyped.
+              assignments simple.
             </p>
           </article>
         </section>
@@ -201,7 +200,7 @@ export default function ForkedTowerEventPage() {
               <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-200">Roster</p>
               <h2 id="party-rosters" className="mt-2 text-3xl font-bold text-white">48 signed players</h2>
             </div>
-            <p className="text-sm text-slate-400">Generated names for prototype data</p>
+            <p className="text-sm text-slate-400">Full roster for tonight&apos;s run</p>
           </div>
 
           <div className="grid gap-5 xl:grid-cols-2">

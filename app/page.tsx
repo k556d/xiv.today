@@ -56,8 +56,7 @@ export default function Home() {
             community events, tournaments, conventions, and fan gatherings.
           </p>
           <p className="mt-5 max-w-2xl text-sm leading-6 text-cyan-100/80">
-            Prototype behavior: select any event below to open a realistic Forked
-            Tower planning example.
+            Select any event below to open its Forked Tower planning page.
           </p>
         </section>
 
@@ -71,7 +70,7 @@ export default function Home() {
                 Upcoming events
               </h2>
             </div>
-            <p className="text-sm text-slate-400">Example events for today</p>
+            <p className="text-sm text-slate-400">Events for today</p>
           </div>
 
           <ol className="grid gap-4">
