@@ -1,46 +1,12 @@
 import Link from "next/link";
+import { db } from "@/db";
+import { events } from "@/db/schema";
 
 const forkedTowerHref = "/events/forked-tower";
 
-const upcomingEvents = [
-  {
-    name: "LunarCon Panel Block",
-    date: "Today, June 8, 2026 · 10:00 UTC",
-    organizer: "Player-run convention",
-    description:
-      "A morning panel slot for community talks, venue previews, contests, and convention announcements.",
-  },
-  {
-    name: "MogTalk Raid Roundtable",
-    date: "Today, June 8, 2026 · 13:00 UTC",
-    organizer: "MogTalk",
-    description:
-      "A midday community broadcast discussing raid preparation, progression stories, and team expectations.",
-  },
-  {
-    name: "Crystalline Conflict Community Cup",
-    date: "Today, June 8, 2026 · 16:00 UTC",
-    organizer: "PvP community",
-    description:
-      "An afternoon tournament block spotlighting Crystalline Conflict teams, casters, brackets, and match streams.",
-  },
-  {
-    name: "FFXIV Art Party",
-    date: "Today, June 8, 2026 · 19:00 UTC",
-    organizer: "Artist community",
-    description:
-      "An evening social gathering where artists draw player characters, trade sketches, and share finished pieces online.",
-  },
-  {
-    name: "Fan Festival Watch Party",
-    date: "Today, June 8, 2026 · 22:00 UTC",
-    organizer: "Local communities",
-    description:
-      "A late watch party for keynote highlights, cosplay showcases, concert clips, and live-letter speculation.",
-  },
-];
+export default async function Home() {
+  const upcomingEvents = await db.select().from(events);
 
-export default function Home() {
   return (
     <main className="min-h-screen bg-[#090b16] px-6 py-10 text-slate-100 sm:px-10 lg:px-16">
       <div className="mx-auto flex min-h-[calc(100vh-5rem)] w-full max-w-5xl flex-col gap-12">
@@ -55,10 +21,6 @@ export default function Home() {
             A simple home base for keeping track of notable Final Fantasy XIV
             community events, tournaments, conventions, and fan gatherings.
           </p>
-          <p className="mt-5 max-w-2xl text-sm leading-6 text-cyan-100/80">
-            Prototype behavior: select any event below to open a realistic Forked
-            Tower planning example.
-          </p>
         </section>
 
         <section aria-labelledby="upcoming-events" className="flex-1">
@@ -71,12 +33,11 @@ export default function Home() {
                 Upcoming events
               </h2>
             </div>
-            <p className="text-sm text-slate-400">Example events for today</p>
           </div>
 
           <ol className="grid gap-4">
             {upcomingEvents.map((event) => (
-              <li key={event.name}>
+              <li key={event.id}>
                 <Link
                   href={forkedTowerHref}
                   className="group block rounded-3xl border border-white/10 bg-slate-950/70 p-6 transition hover:-translate-y-0.5 hover:border-cyan-200/50 hover:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-200 focus:ring-offset-2 focus:ring-offset-[#090b16]"
