@@ -15,6 +15,13 @@
       "when": 1781005091342,
       "tag": "0001_sticky_blackheart",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1781279493000,
+      "tag": "0002_add_user_password",
+      "breakpoints": true
     }
   ]
 }
