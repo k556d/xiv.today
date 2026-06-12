@@ -35,18 +35,25 @@ export async function register(formData: FormData): Promise<RegisterResult> {
     };
   }
 
-  const [existing] = await db
-    .select({ id: users.id })
-    .from(users)
-    .where(eq(users.name, trimmed))
-    .limit(1);
+  try {
+    const [existing] = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.name, trimmed))
+      .limit(1);
 
-  if (existing) {
-    return { success: false, error: "Username is already taken." };
+    if (existing) {
+      return { success: false, error: "Username is already taken." };
+    }
+
+    const hash = await bcrypt.hash(password, 10);
+    await db.insert(users).values({ name: trimmed, password: hash });
+
+    return { success: true };
+  } catch {
+    return {
+      success: false,
+      error: "Registration is temporarily unavailable. Please try again later.",
+    };
   }
-
-  const hash = await bcrypt.hash(password, 10);
-  await db.insert(users).values({ name: trimmed, password: hash });
-
-  return { success: true };
 }
