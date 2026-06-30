@@ -2,6 +2,7 @@
   "name": "xiv.today",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@11.9.0",
   "scripts": {
     "dev": "next dev",
     "build": "[ \"$VERCEL_ENV\" = 'production' ] && drizzle-kit migrate; next build",
@@ -9,8 +10,8 @@
     "lint": "eslint",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:seed": "npx tsx db/seed.ts",
-    "db:setup": "npm run db:migrate && npm run db:seed"
+    "db:seed": "pnpm dlx tsx db/seed.ts",
+    "db:setup": "pnpm run db:migrate && pnpm run db:seed"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.11.2",
