@@ -1,30 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# xiv.today
 
-## Getting Started
+Event planner and showcase site for Final Fantasy XIV community events.
 
-First, run the development server:
+## What lives here
 
-```bash
-pnpm dev
-```
+- `app/page.tsx` renders the public home page with upcoming events.
+- `app/events/forked-tower/page.tsx` shows the sample Forked Tower event plan.
+- `app/api/auth/[...nextauth]/route.ts` exposes the NextAuth handler.
+- `db/schema.ts` defines the database tables used by the app.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Install dependencies with `pnpm install`.
+2. Set `DATABASE_URL` in your environment.
+3. Run migrations with `pnpm run db:migrate`.
+4. Seed sample events with `pnpm run db:seed`.
+5. Start the app with `pnpm dev`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Scripts
 
-## Learn More
+- `pnpm dev` - start the development server
+- `pnpm build` - build the app and run production migrations
+- `pnpm start` - start the production server
+- `pnpm lint` - run ESLint
+- `pnpm run db:generate` - generate Drizzle migrations
+- `pnpm run db:migrate` - apply migrations
+- `pnpm run db:seed` - seed sample event data
+- `pnpm run db:setup` - migrate and seed in one step
 
-To learn more about Next.js, take a look at the following resources:
+## Notes
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- The app uses `next-auth` for sign-in, including username/password and Discord.
+- If `DATABASE_URL` is missing, the home page falls back to an empty event list.
+- The design uses the built-in Geist font family through `next/font`.
