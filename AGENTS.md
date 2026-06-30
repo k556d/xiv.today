@@ -7,3 +7,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 # Commit Messages
 
 Use sentence case for commit names and do not use conventional commits.
+
+# Pull Requests
+
+When creating or editing GitHub PR bodies, use real multiline text or a body file. Do not pass literal `\n` escape sequences in the PR description.
