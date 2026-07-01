@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { db } from "@/db";
-import { events } from "@/db/schema";
+import { db } from "@/server/db";
+import { events } from "@/server/db/schema";
 
 export const dynamic = "force-dynamic";
 

@@ -1,8 +1,8 @@
 import NextAuth from "next-auth";
 import Discord from "next-auth/providers/discord";
 import Credentials from "next-auth/providers/credentials";
-import { db } from "@/db";
-import { users } from "@/db/schema";
+import { db } from "@/server/db";
+import { users } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 

@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { signIn } from "next-auth/react";
-import { register } from "@/app/actions/auth";
+import { register } from "@/server/actions/auth";
 
 type Mode = "choose" | "login" | "register";
 
