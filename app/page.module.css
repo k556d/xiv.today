@@ -23,7 +23,7 @@
 }
 
 .hero {
-  @apply border border-white/10 bg-white/[0.06] p-8 shadow-2xl shadow-indigo-950/30 backdrop-blur;
+  @apply border border-white/10 bg-white/6 p-8 shadow-2xl shadow-indigo-950/30 backdrop-blur;
   border-radius: 2rem;
 }
 
@@ -113,14 +113,8 @@
   letter-spacing: 0.2em;
 }
 
-.eventMeta {
-}
-
 .eventOrganizer {
   @apply mt-2 text-sm text-slate-400;
-}
-
-.eventContent {
 }
 
 .eventHeading {

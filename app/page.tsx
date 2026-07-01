@@ -60,13 +60,13 @@ export default async function Home() {
                     className={styles.eventLink}
                   >
                     <article className={styles.eventArticle}>
-                      <div className={styles.eventMeta}>
+                      <div>
                         <p className={styles.eventMetaKicker}>
                           {event.date}
                         </p>
                         <p className={styles.eventOrganizer}>{event.organizer}</p>
                       </div>
-                      <div className={styles.eventContent}>
+                      <div>
                         <div className={styles.eventHeading}>
                           <h3 className={styles.eventName}>{event.name}</h3>
                           <span className={styles.eventBadge}>

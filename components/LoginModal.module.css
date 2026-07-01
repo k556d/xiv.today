@@ -32,7 +32,7 @@
 }
 
 .choiceButton {
-  @apply flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-cyan-100 transition;
+  @apply flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/6 px-4 py-3 text-sm font-semibold text-cyan-100 transition;
 }
 
 .choiceButton:hover {
@@ -52,16 +52,13 @@
   @apply flex flex-col gap-4;
 }
 
-.field {
-}
-
 .label {
   @apply mb-1 block text-xs font-semibold uppercase text-slate-400;
   letter-spacing: 0.08em;
 }
 
 .input {
-  @apply w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-slate-500 outline-none transition;
+  @apply w-full rounded-lg border border-white/10 bg-white/6 px-3 py-2 text-sm text-white placeholder-slate-500 outline-none transition;
 }
 
 .input:focus-visible {
