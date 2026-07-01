@@ -1,0 +1,149 @@
+@reference "tailwindcss";
+
+.page {
+  @apply min-h-screen;
+  @apply px-6 py-10;
+  @apply bg-[#090b16] text-slate-100;
+  @apply sm:px-10 lg:px-16;
+}
+
+.shell {
+  @apply flex w-full max-w-5xl flex-col min-h-[calc(100vh-5rem)];
+  @apply mx-auto gap-12;
+}
+
+.hero {
+  @apply p-8;
+  @apply border rounded-[2rem] border-white/10;
+  @apply bg-white/6;
+  @apply shadow-2xl shadow-indigo-950/30 backdrop-blur;
+  @apply sm:p-12;
+}
+
+.kicker {
+  @apply mb-4;
+  @apply uppercase text-sm font-semibold tracking-[0.35em];
+  @apply text-cyan-200;
+}
+
+.title {
+  @apply text-5xl font-bold tracking-tight;
+  @apply text-white;
+  @apply sm:text-7xl;
+}
+
+.lead {
+  @apply max-w-2xl;
+  @apply mt-6;
+  @apply text-lg leading-8;
+  @apply text-slate-300;
+}
+
+.section {
+  @apply flex-1;
+}
+
+.sectionHeader {
+  @apply flex flex-col;
+  @apply mb-6 gap-2;
+  @apply sm:flex-row sm:items-end sm:justify-between;
+}
+
+.sectionKicker {
+  @apply uppercase text-sm font-semibold tracking-[0.25em];
+  @apply text-cyan-200;
+}
+
+.sectionTitle {
+  @apply mt-2;
+  @apply text-3xl font-bold;
+  @apply text-white;
+}
+
+.emptyState {
+  @apply p-8;
+  @apply border rounded-3xl border-white/10;
+  @apply text-center;
+  @apply bg-slate-950/70 text-slate-400;
+}
+
+.list {
+  @apply grid;
+  @apply gap-4;
+}
+
+.eventLink {
+  @apply block;
+  @apply p-6;
+  @apply border rounded-3xl border-white/10;
+  @apply bg-slate-950/70;
+  @apply transition;
+}
+
+.eventLink:hover {
+  @apply border-cyan-200/50;
+  @apply bg-slate-900;
+  @apply -translate-y-0.5;
+}
+
+.eventLink:focus-visible {
+  @apply outline-2 outline-offset-2 outline-cyan-200;
+}
+
+.eventArticle {
+  @apply grid;
+  @apply gap-4;
+  @apply md:grid-cols-[14rem_1fr] md:items-start;
+}
+
+.eventMetaKicker {
+  @apply uppercase text-sm font-semibold tracking-[0.2em];
+  @apply text-cyan-200;
+}
+
+.eventOrganizer {
+  @apply mt-2;
+  @apply text-sm;
+  @apply text-slate-400;
+}
+
+.eventHeading {
+  @apply flex flex-col;
+  @apply gap-2;
+  @apply sm:flex-row sm:items-start sm:justify-between;
+}
+
+.eventName {
+  @apply text-2xl font-semibold;
+  @apply text-white;
+}
+
+.eventBadge {
+  @apply flex-shrink-0;
+  @apply px-3 py-1;
+  @apply border rounded-full border-cyan-200/30;
+  @apply uppercase text-xs font-semibold tracking-[0.18em];
+  @apply bg-cyan-200/10 text-cyan-100;
+  @apply transition;
+}
+
+.eventLink:hover .eventBadge {
+  @apply bg-cyan-200/20;
+}
+
+.eventDescription {
+  @apply mt-3;
+  @apply leading-7;
+  @apply text-slate-300;
+}
+
+.footer {
+  @apply pt-6;
+  @apply border-t border-white/10;
+  @apply text-sm leading-6;
+  @apply text-slate-400;
+}
+
+.footerSpacing {
+  @apply mt-2;
+}

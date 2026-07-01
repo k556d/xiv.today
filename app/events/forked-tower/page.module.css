@@ -1,0 +1,342 @@
+@reference "tailwindcss";
+
+.page {
+  @apply min-h-screen;
+  @apply px-6 py-8;
+  @apply text-slate-100 bg-[radial-gradient(circle_at_top_left,#41246d_0,#111827_35%,#060711_72%)];
+  @apply sm:px-10 lg:px-16;
+}
+
+.container {
+  @apply flex w-full max-w-7xl flex-col;
+  @apply mx-auto gap-8;
+}
+
+.backLink {
+  @apply w-fit;
+  @apply px-4 py-2;
+  @apply border rounded-full border-white/10;
+  @apply text-sm font-semibold;
+  @apply bg-white/6 text-cyan-100;
+  @apply transition;
+}
+
+.backLink:hover {
+  @apply border-cyan-200/50;
+  @apply bg-cyan-200/10;
+}
+
+.backLink:focus-visible {
+  @apply outline-2 outline-offset-2 outline-cyan-200;
+}
+
+.hero {
+  @apply grid;
+  @apply gap-6 p-6;
+  @apply border rounded-[2rem] border-white/10;
+  @apply bg-slate-950/70;
+  @apply shadow-2xl shadow-purple-950/40 backdrop-blur;
+}
+
+.hero {
+  @apply md:grid-cols-[1.25fr_0.75fr] md:p-10;
+}
+
+.heroKicker {
+  @apply uppercase text-sm font-semibold tracking-[0.3em];
+  @apply text-pink-200;
+}
+
+.heroTitle {
+  @apply mt-4;
+  @apply text-4xl font-bold tracking-tight;
+  @apply text-white;
+  @apply sm:text-6xl;
+}
+
+.heroLead {
+  @apply max-w-3xl;
+  @apply mt-5;
+  @apply text-lg leading-8;
+  @apply text-slate-300;
+}
+
+.heroStats {
+  @apply grid;
+  @apply gap-3 p-5;
+  @apply border rounded-3xl border-white/10;
+  @apply bg-white/6;
+}
+
+.statLabel {
+  @apply uppercase text-xs font-semibold tracking-[0.2em];
+  @apply text-slate-400;
+}
+
+.statValue {
+  @apply mt-1;
+  @apply text-xl font-semibold;
+  @apply text-white;
+}
+
+.readyValue {
+  @apply mt-1;
+  @apply text-xl font-semibold;
+  @apply text-emerald-200;
+}
+
+.passwordValue {
+  @apply font-mono text-3xl font-bold tracking-[0.18em];
+  @apply text-pink-100;
+}
+
+.passwordValueBlock {
+  @apply mt-1;
+  @apply font-mono text-3xl font-bold tracking-[0.18em];
+  @apply text-pink-100;
+}
+
+.summaryGrid {
+  @apply grid;
+  @apply gap-4;
+}
+
+.summaryGrid {
+  @apply md:grid-cols-5;
+}
+
+.summaryCard {
+  @apply p-5;
+  @apply border rounded-3xl border-white/10;
+  @apply bg-slate-950/70;
+}
+
+.summaryRole {
+  @apply uppercase text-sm font-semibold tracking-[0.22em];
+  @apply text-cyan-200;
+}
+
+.summaryCount {
+  @apply mt-3;
+  @apply text-4xl font-bold;
+  @apply text-white;
+}
+
+.summaryNote {
+  @apply mt-3;
+  @apply text-sm leading-6;
+  @apply text-slate-400;
+}
+
+.detailGrid {
+  @apply grid;
+  @apply gap-6;
+}
+
+.detailGrid {
+  @apply lg:grid-cols-[0.75fr_1.25fr];
+}
+
+.passwordCard {
+  @apply p-6;
+  @apply border rounded-[2rem] border-pink-200/20;
+  @apply bg-pink-950/30;
+  @apply shadow-xl shadow-pink-950/20;
+}
+
+.passwordKicker {
+  @apply uppercase text-sm font-semibold tracking-[0.25em];
+  @apply text-pink-200;
+}
+
+.passwordTitle {
+  @apply mt-3;
+  @apply text-3xl font-bold;
+  @apply text-white;
+}
+
+.passwordLead {
+  @apply mt-4;
+  @apply leading-7;
+  @apply text-slate-300;
+}
+
+.timelineCard {
+  @apply p-6;
+  @apply border rounded-[2rem] border-white/10;
+  @apply bg-slate-950/75;
+}
+
+.timelineKicker {
+  @apply uppercase text-sm font-semibold tracking-[0.25em];
+  @apply text-cyan-200;
+}
+
+.timelineTitle {
+  @apply mt-3;
+  @apply text-3xl font-bold;
+  @apply text-white;
+}
+
+.timelineList {
+  @apply grid;
+  @apply mt-6 gap-4;
+}
+
+.timelineItem {
+  @apply grid;
+  @apply gap-4;
+}
+
+.timelineItem {
+  @apply sm:grid-cols-[4.5rem_1fr];
+}
+
+.timelineTime {
+  @apply font-mono text-sm font-semibold;
+  @apply text-pink-200;
+}
+
+.timelineText {
+  @apply text-sm leading-6;
+  @apply text-slate-300;
+}
+
+.noteCard {
+  @apply p-6;
+  @apply border rounded-[2rem] border-white/10;
+  @apply bg-slate-950/75;
+}
+
+.noteKicker {
+  @apply uppercase text-sm font-semibold tracking-[0.25em];
+  @apply text-cyan-200;
+}
+
+.noteTitle {
+  @apply mt-3;
+  @apply text-3xl font-bold;
+  @apply text-white;
+}
+
+.noteText {
+  @apply mt-4;
+  @apply leading-7;
+  @apply text-slate-300;
+}
+
+.sectionHeader {
+  @apply flex flex-col;
+  @apply mb-5 gap-2;
+  @apply sm:flex-row sm:items-end sm:justify-between;
+}
+
+.sectionKicker {
+  @apply uppercase text-sm font-semibold tracking-[0.25em];
+  @apply text-cyan-200;
+}
+
+.sectionTitle {
+  @apply mt-2;
+  @apply text-3xl font-bold;
+  @apply text-white;
+}
+
+.sectionMeta {
+  @apply text-sm;
+  @apply text-slate-400;
+}
+
+.partyGrid {
+  @apply grid;
+  @apply gap-5;
+}
+
+.partyGrid {
+  @apply xl:grid-cols-2;
+}
+
+.partyCard {
+  @apply p-5;
+  @apply border rounded-[1.75rem] border-white/10;
+  @apply bg-slate-950/80;
+}
+
+.partyHeader {
+  @apply flex flex-col;
+  @apply gap-1;
+  @apply sm:flex-row sm:items-start sm:justify-between;
+}
+
+.partyName {
+  @apply text-2xl font-bold;
+  @apply text-white;
+}
+
+.partyFocus {
+  @apply mt-1;
+  @apply text-sm;
+  @apply text-slate-400;
+}
+
+.partyReady {
+  @apply w-fit;
+  @apply mt-2 px-3 py-1;
+  @apply rounded-full;
+  @apply uppercase text-xs font-semibold tracking-[0.18em];
+  @apply bg-emerald-300/10 text-emerald-200;
+  @apply sm:mt-0;
+}
+
+.tableWrap {
+  @apply overflow-hidden;
+  @apply mt-5;
+  @apply border rounded-2xl border-white/10;
+}
+
+.table {
+  @apply w-full;
+  @apply border-collapse;
+  @apply text-left text-sm;
+}
+
+.tableHead {
+  @apply uppercase text-xs tracking-[0.18em];
+  @apply bg-white/6 text-slate-400;
+}
+
+.tableHeadCell {
+  @apply px-4 py-3;
+  @apply font-semibold;
+}
+
+.tableBody {
+  @apply divide-y divide-white/10;
+}
+
+.tableRow {
+  @apply bg-slate-950/30;
+}
+
+.roleCell {
+  @apply px-4 py-3;
+  @apply text-cyan-100;
+}
+
+.jobCell {
+  @apply px-4 py-3;
+  @apply text-slate-300;
+}
+
+.playerCell {
+  @apply px-4 py-3;
+  @apply font-semibold;
+  @apply text-white;
+}
+
+.footer {
+  @apply pb-2 pt-6;
+  @apply border-t border-white/10;
+  @apply text-sm leading-6;
+  @apply text-slate-400;
+}

@@ -1,0 +1,16 @@
+@reference "tailwindcss";
+
+.html {
+  @apply h-full;
+  @apply antialiased;
+}
+
+.body {
+  @apply min-h-full flex flex-col;
+}
+
+.header {
+  @apply flex items-center justify-end;
+  @apply px-6 py-4;
+  @apply sm:px-10 lg:px-16;
+}
