@@ -1,78 +1,81 @@
 @reference "tailwindcss";
 
 .page {
-  @apply min-h-screen px-6 py-8 text-slate-100;
-  background: radial-gradient(circle at top left, #41246d 0, #111827 35%, #060711 72%);
-}
-
-@media (min-width: 640px) {
-  .page {
-    @apply px-10;
-  }
-}
-
-@media (min-width: 1024px) {
-  .page {
-    @apply px-16;
-  }
+  @apply min-h-screen;
+  @apply px-6 py-8;
+  @apply text-slate-100;
+  @apply bg-[radial-gradient(circle_at_top_left,#41246d_0,#111827_35%,#060711_72%)];
+  @apply sm:px-10;
+  @apply lg:px-16;
 }
 
 .container {
-  @apply mx-auto flex w-full max-w-7xl flex-col gap-8;
+  @apply mx-auto;
+  @apply flex w-full max-w-7xl flex-col;
+  @apply gap-8;
 }
 
 .backLink {
-  @apply w-fit rounded-full border border-white/10 bg-white/6 px-4 py-2 text-sm font-semibold text-cyan-100 transition;
+  @apply w-fit;
+  @apply px-4 py-2;
+  @apply rounded-full;
+  @apply border border-white/10;
+  @apply bg-white/6;
+  @apply text-sm font-semibold;
+  @apply text-cyan-100;
+  @apply transition;
 }
 
 .backLink:hover {
-  @apply border-cyan-200/50 bg-cyan-200/10;
+  @apply border-cyan-200/50;
+  @apply bg-cyan-200/10;
 }
 
 .backLink:focus-visible {
-  outline: 2px solid rgb(165 243 252 / 1);
-  outline-offset: 2px;
+  @apply outline-2 outline-offset-2 outline-cyan-200;
 }
 
 .hero {
-  @apply grid gap-6 border border-white/10 bg-slate-950/70 p-6 shadow-2xl shadow-purple-950/40 backdrop-blur;
-  border-radius: 2rem;
+  @apply grid;
+  @apply gap-6;
+  @apply p-6;
+  @apply rounded-[2rem];
+  @apply border border-white/10;
+  @apply shadow-2xl shadow-purple-950/40;
+  @apply backdrop-blur;
+  @apply bg-slate-950/70;
 }
 
-@media (min-width: 768px) {
-  .hero {
-    grid-template-columns: 1.25fr 0.75fr;
-    @apply p-10;
-  }
+.hero {
+  @apply md:grid-cols-[1.25fr_0.75fr] md:p-10;
 }
 
 .heroKicker {
-  @apply text-sm font-semibold uppercase text-pink-200;
-  letter-spacing: 0.3em;
+  @apply text-sm font-semibold uppercase tracking-[0.3em];
+  @apply text-pink-200;
 }
 
 .heroTitle {
-  @apply mt-4 text-4xl font-bold tracking-tight text-white;
-}
-
-@media (min-width: 640px) {
-  .heroTitle {
-    @apply text-6xl;
-  }
+  @apply mt-4;
+  @apply text-4xl font-bold tracking-tight text-white;
+  @apply sm:text-6xl;
 }
 
 .heroLead {
-  @apply mt-5 max-w-3xl text-lg leading-8 text-slate-300;
+  @apply mt-5 max-w-3xl;
+  @apply text-lg leading-8 text-slate-300;
 }
 
 .heroStats {
-  @apply grid gap-3 border border-white/10 bg-white/6 p-5;
-  border-radius: 1.5rem;
+  @apply grid gap-3;
+  @apply p-5;
+  @apply rounded-3xl;
+  @apply border border-white/10;
+  @apply bg-white/6;
 }
 
 .statLabel {
-  @apply text-xs font-semibold uppercase text-slate-400;
-  letter-spacing: 0.2em;
+  @apply text-xs font-semibold uppercase tracking-[0.2em] text-slate-400;
 }
 
 .statValue {
@@ -84,33 +87,30 @@
 }
 
 .passwordValue {
-  @apply font-mono text-3xl font-bold text-pink-100;
-  letter-spacing: 0.18em;
+  @apply font-mono text-3xl font-bold tracking-[0.18em] text-pink-100;
 }
 
 .passwordValueBlock {
-  @apply mt-1 font-mono text-3xl font-bold text-pink-100;
-  letter-spacing: 0.18em;
+  @apply mt-1 font-mono text-3xl font-bold tracking-[0.18em] text-pink-100;
 }
 
 .summaryGrid {
   @apply grid gap-4;
 }
 
-@media (min-width: 768px) {
-  .summaryGrid {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-  }
+.summaryGrid {
+  @apply md:grid-cols-5;
 }
 
 .summaryCard {
-  @apply border border-white/10 bg-slate-950/70 p-5;
-  border-radius: 1.5rem;
+  @apply p-5;
+  @apply rounded-3xl;
+  @apply border border-white/10;
+  @apply bg-slate-950/70;
 }
 
 .summaryRole {
-  @apply text-sm font-semibold uppercase text-cyan-200;
-  letter-spacing: 0.22em;
+  @apply text-sm font-semibold uppercase tracking-[0.22em] text-cyan-200;
 }
 
 .summaryCount {
@@ -125,20 +125,20 @@
   @apply grid gap-6;
 }
 
-@media (min-width: 1024px) {
-  .detailGrid {
-    grid-template-columns: 0.75fr 1.25fr;
-  }
+.detailGrid {
+  @apply lg:grid-cols-[0.75fr_1.25fr];
 }
 
 .passwordCard {
-  @apply border border-pink-200/20 bg-pink-950/30 p-6 shadow-xl shadow-pink-950/20;
-  border-radius: 2rem;
+  @apply p-6;
+  @apply rounded-[2rem];
+  @apply border border-pink-200/20;
+  @apply bg-pink-950/30;
+  @apply shadow-xl shadow-pink-950/20;
 }
 
 .passwordKicker {
-  @apply text-sm font-semibold uppercase text-pink-200;
-  letter-spacing: 0.25em;
+  @apply text-sm font-semibold uppercase tracking-[0.25em] text-pink-200;
 }
 
 .passwordTitle {
@@ -150,13 +150,14 @@
 }
 
 .timelineCard {
-  @apply border border-white/10 bg-slate-950/75 p-6;
-  border-radius: 2rem;
+  @apply p-6;
+  @apply rounded-[2rem];
+  @apply border border-white/10;
+  @apply bg-slate-950/75;
 }
 
 .timelineKicker {
-  @apply text-sm font-semibold uppercase text-cyan-200;
-  letter-spacing: 0.25em;
+  @apply text-sm font-semibold uppercase tracking-[0.25em] text-cyan-200;
 }
 
 .timelineTitle {
@@ -171,10 +172,8 @@
   @apply grid gap-4;
 }
 
-@media (min-width: 640px) {
-  .timelineItem {
-    grid-template-columns: 4.5rem 1fr;
-  }
+.timelineItem {
+  @apply sm:grid-cols-[4.5rem_1fr];
 }
 
 .timelineTime {
@@ -186,13 +185,14 @@
 }
 
 .noteCard {
-  @apply border border-white/10 bg-slate-950/75 p-6;
-  border-radius: 2rem;
+  @apply p-6;
+  @apply rounded-[2rem];
+  @apply border border-white/10;
+  @apply bg-slate-950/75;
 }
 
 .noteKicker {
-  @apply text-sm font-semibold uppercase text-cyan-200;
-  letter-spacing: 0.25em;
+  @apply text-sm font-semibold uppercase tracking-[0.25em] text-cyan-200;
 }
 
 .noteTitle {
@@ -205,17 +205,11 @@
 
 .sectionHeader {
   @apply mb-5 flex flex-col gap-2;
-}
-
-@media (min-width: 640px) {
-  .sectionHeader {
-    @apply flex-row items-end justify-between;
-  }
+  @apply sm:flex-row sm:items-end sm:justify-between;
 }
 
 .sectionKicker {
-  @apply text-sm font-semibold uppercase text-cyan-200;
-  letter-spacing: 0.25em;
+  @apply text-sm font-semibold uppercase tracking-[0.25em] text-cyan-200;
 }
 
 .sectionTitle {
@@ -230,25 +224,20 @@
   @apply grid gap-5;
 }
 
-@media (min-width: 1280px) {
-  .partyGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+.partyGrid {
+  @apply xl:grid-cols-2;
 }
 
 .partyCard {
-  @apply border border-white/10 bg-slate-950/80 p-5;
-  border-radius: 1.75rem;
+  @apply p-5;
+  @apply rounded-[1.75rem];
+  @apply border border-white/10;
+  @apply bg-slate-950/80;
 }
 
 .partyHeader {
   @apply flex flex-col gap-1;
-}
-
-@media (min-width: 640px) {
-  .partyHeader {
-    @apply flex-row items-start justify-between;
-  }
+  @apply sm:flex-row sm:items-start sm:justify-between;
 }
 
 .partyName {
@@ -260,14 +249,8 @@
 }
 
 .partyReady {
-  @apply mt-2 w-fit rounded-full bg-emerald-300/10 px-3 py-1 text-xs font-semibold uppercase text-emerald-200;
-  letter-spacing: 0.18em;
-}
-
-@media (min-width: 640px) {
-  .partyReady {
-    @apply mt-0;
-  }
+  @apply mt-2 w-fit rounded-full bg-emerald-300/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-200;
+  @apply sm:mt-0;
 }
 
 .tableWrap {
@@ -279,8 +262,7 @@
 }
 
 .tableHead {
-  @apply bg-white/6 text-xs uppercase text-slate-400;
-  letter-spacing: 0.18em;
+  @apply bg-white/6 text-xs uppercase tracking-[0.18em] text-slate-400;
 }
 
 .tableHeadCell {

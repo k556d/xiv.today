@@ -5,9 +5,7 @@
 }
 
 .panel {
-  @apply relative w-full max-w-sm border border-white/10 p-8 shadow-2xl;
-  background: #12152a;
-  border-radius: 1rem;
+  @apply relative w-full max-w-sm rounded-2xl border border-white/10 bg-[#12152a] p-8 shadow-2xl;
 }
 
 .closeButton {
@@ -19,8 +17,7 @@
 }
 
 .closeButton:focus-visible {
-  outline: 2px solid rgb(165 243 252 / 1);
-  outline-offset: 2px;
+  @apply outline-2 outline-offset-2 outline-cyan-200;
 }
 
 .title {
@@ -40,8 +37,7 @@
 }
 
 .choiceButton:focus-visible {
-  outline: 2px solid rgb(165 243 252 / 1);
-  outline-offset: 2px;
+  @apply outline-2 outline-offset-2 outline-cyan-200;
 }
 
 .choiceButtonDiscord:hover {
@@ -53,8 +49,7 @@
 }
 
 .label {
-  @apply mb-1 block text-xs font-semibold uppercase text-slate-400;
-  letter-spacing: 0.08em;
+  @apply mb-1 block text-xs font-semibold uppercase tracking-[0.08em] text-slate-400;
 }
 
 .input {
