@@ -1,7 +1,8 @@
 @reference "tailwindcss";
 
 .html {
-  @apply h-full antialiased;
+  @apply h-full;
+  @apply antialiased;
 }
 
 .body {
@@ -9,6 +10,7 @@
 }
 
 .header {
-  @apply flex items-center justify-end px-6 py-4;
+  @apply flex items-center justify-end;
+  @apply px-6 py-4;
   @apply sm:px-10 lg:px-16;
 }

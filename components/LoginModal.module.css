@@ -1,15 +1,23 @@
 @reference "tailwindcss";
 
 .overlay {
-  @apply fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm;
+  @apply fixed inset-0 z-50 flex items-center justify-center;
+  @apply bg-black/60;
+  @apply backdrop-blur-sm;
 }
 
 .panel {
-  @apply relative w-full max-w-sm rounded-2xl border border-white/10 bg-[#12152a] p-8 shadow-2xl;
+  @apply relative w-full max-w-sm;
+  @apply p-8;
+  @apply border rounded-2xl border-white/10;
+  @apply bg-[#12152a];
+  @apply shadow-2xl;
 }
 
 .closeButton {
-  @apply absolute right-4 top-4 text-slate-400 transition;
+  @apply absolute right-4 top-4;
+  @apply text-slate-400;
+  @apply transition;
 }
 
 .closeButton:hover {
@@ -21,19 +29,28 @@
 }
 
 .title {
-  @apply mb-6 text-center text-xl font-bold text-white;
+  @apply mb-6;
+  @apply text-center text-xl font-bold;
+  @apply text-white;
 }
 
 .choiceStack {
-  @apply flex flex-col gap-3;
+  @apply flex flex-col;
+  @apply gap-3;
 }
 
 .choiceButton {
-  @apply flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/6 px-4 py-3 text-sm font-semibold text-cyan-100 transition;
+  @apply flex items-center justify-center;
+  @apply gap-2 px-4 py-3;
+  @apply border rounded-xl border-white/10;
+  @apply text-sm font-semibold;
+  @apply bg-white/6 text-cyan-100;
+  @apply transition;
 }
 
 .choiceButton:hover {
-  @apply border-cyan-200/50 bg-cyan-200/10;
+  @apply border-cyan-200/50;
+  @apply bg-cyan-200/10;
 }
 
 .choiceButton:focus-visible {
@@ -41,19 +58,29 @@
 }
 
 .choiceButtonDiscord:hover {
-  @apply border-indigo-400/50 bg-indigo-400/10;
+  @apply border-indigo-400/50;
+  @apply bg-indigo-400/10;
 }
 
 .form {
-  @apply flex flex-col gap-4;
+  @apply flex flex-col;
+  @apply gap-4;
 }
 
 .label {
-  @apply mb-1 block text-xs font-semibold uppercase tracking-[0.08em] text-slate-400;
+  @apply block;
+  @apply mb-1;
+  @apply uppercase text-xs font-semibold tracking-[0.08em];
+  @apply text-slate-400;
 }
 
 .input {
-  @apply w-full rounded-lg border border-white/10 bg-white/6 px-3 py-2 text-sm text-white placeholder-slate-500 outline-none transition;
+  @apply w-full;
+  @apply px-3 py-2;
+  @apply border rounded-lg border-white/10 outline-none;
+  @apply text-sm;
+  @apply bg-white/6 text-white placeholder-slate-500;
+  @apply transition;
 }
 
 .input:focus-visible {
@@ -61,11 +88,16 @@
 }
 
 .error {
-  @apply text-center text-xs text-red-400;
+  @apply text-center text-xs;
+  @apply text-red-400;
 }
 
 .submitButton {
-  @apply rounded-xl bg-cyan-600 px-4 py-2.5 text-sm font-semibold text-white transition;
+  @apply px-4 py-2.5;
+  @apply rounded-xl;
+  @apply text-sm font-semibold;
+  @apply bg-cyan-600 text-white;
+  @apply transition;
 }
 
 .submitButton:hover {
@@ -77,11 +109,13 @@
 }
 
 .helpText {
-  @apply text-center text-xs text-slate-400;
+  @apply text-center text-xs;
+  @apply text-slate-400;
 }
 
 .helpButton {
-  @apply font-semibold text-cyan-300;
+  @apply font-semibold;
+  @apply text-cyan-300;
 }
 
 .helpButton:hover {
@@ -89,7 +123,9 @@
 }
 
 .backButton {
-  @apply text-xs text-slate-500 transition;
+  @apply text-xs;
+  @apply text-slate-500;
+  @apply transition;
 }
 
 .backButton:hover {

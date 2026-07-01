@@ -7,7 +7,9 @@
     "dev": "next dev",
     "build": "[ \"$VERCEL_ENV\" = 'production' ] && drizzle-kit migrate; next build",
     "start": "next start",
-    "lint": "eslint",
+    "lint": "eslint && stylelint \"**/*.css\"",
+    "lint:css": "stylelint \"**/*.css\"",
+    "lint:css:fix": "stylelint \"**/*.css\" --fix",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:seed": "pnpm dlx tsx server/db/seed.ts",
@@ -33,6 +35,8 @@
     "drizzle-kit": "^0.31.10",
     "eslint": "^9",
     "eslint-config-next": "16.2.7",
+    "stylelint": "^17.14.0",
+    "stylelint-config-standard": "^40.0.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
