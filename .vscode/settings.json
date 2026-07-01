@@ -1,0 +1,9 @@
+{
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {
+    "next.config.*": "drizzle.config.ts, eslint.config.mjs, next-env.d.ts, postcss.config.mjs",
+    "package.json": ".gitignore, pnpm-lock.yaml, pnpm-workspace.yaml",
+    "tsconfig.json": "tsconfig.tsbuildinfo"
+  }
+}
