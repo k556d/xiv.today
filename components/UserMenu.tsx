@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import LoginModal from "./LoginModal";
+import styles from "./UserMenu.module.css";
 
 export default function UserMenu() {
   const { data: session, status } = useSession();
@@ -10,16 +11,16 @@ export default function UserMenu() {
 
   if (status === "loading") {
     return (
-      <div className="h-9 w-9 animate-pulse rounded-full bg-white/10" />
+      <div className={styles.loading} />
     );
   }
 
   if (!session?.user) {
-    return (
+      return (
       <>
         <button
           onClick={() => setShowLogin(true)}
-          className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-cyan-100 transition hover:border-cyan-200/50 hover:bg-cyan-200/10 focus:outline-none focus:ring-2 focus:ring-cyan-200"
+          className={styles.signInButton}
         >
           Sign in
         </button>
@@ -29,13 +30,13 @@ export default function UserMenu() {
   }
 
   return (
-    <div className="relative flex items-center gap-3">
-      <div className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-indigo-600 text-sm font-bold text-white">
+    <div className={styles.userMenu}>
+      <div className={styles.avatar}>
         {session.user.name?.charAt(0)?.toUpperCase() ?? "?"}
       </div>
       <button
         onClick={() => signOut()}
-        className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-slate-300 transition hover:border-red-400/50 hover:bg-red-400/10 hover:text-red-300 focus:outline-none focus:ring-2 focus:ring-red-400"
+        className={styles.signOutButton}
       >
         Sign out
       </button>

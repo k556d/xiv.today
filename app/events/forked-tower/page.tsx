@@ -1,4 +1,5 @@
 import Link from "next/link";
+import styles from "./page.module.css";
 
 const parties = [
   {
@@ -105,64 +106,66 @@ const roleSummary = [
 
 export default function ForkedTowerEventPage() {
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,#41246d_0,#111827_35%,#060711_72%)] px-6 py-8 text-slate-100 sm:px-10 lg:px-16">
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-8">
+    <main className={styles.page}>
+      <div className={styles.container}>
         <Link
           href="/"
-          className="w-fit rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-cyan-100 transition hover:border-cyan-200/50 hover:bg-cyan-200/10 focus:outline-none focus:ring-2 focus:ring-cyan-200"
+          className={styles.backLink}
         >
           ← Back to today&apos;s events
         </Link>
 
-        <section className="grid gap-6 rounded-[2rem] border border-white/10 bg-slate-950/70 p-6 shadow-2xl shadow-purple-950/40 backdrop-blur md:grid-cols-[1.25fr_0.75fr] md:p-10">
+        <section className={styles.hero}>
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-pink-200">
+            <p className={styles.heroKicker}>
               Planned field operation
             </p>
-            <h1 className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-6xl">
+            <h1 className={styles.heroTitle}>
               The Forked Tower: Blood
             </h1>
-            <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
+            <p className={styles.heroLead}>
               A sample 48-player FFXIV event page for an Occult Crescent raid night.
               The signup is intentionally filled with generated player names so the UI
               can be reviewed as if this were a real scheduled run.
             </p>
           </div>
-          <dl className="grid gap-3 rounded-3xl border border-white/10 bg-white/[0.06] p-5">
+          <dl className={styles.heroStats}>
             <div>
-              <dt className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">When</dt>
-              <dd className="mt-1 text-xl font-semibold text-white">Tonight · 19:00 UTC</dd>
+              <dt className={styles.statLabel}>When</dt>
+              <dd className={styles.statValue}>Tonight · 19:00 UTC</dd>
             </div>
             <div>
-              <dt className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Scale</dt>
-              <dd className="mt-1 text-xl font-semibold text-white">48 players · 6 full parties</dd>
+              <dt className={styles.statLabel}>Scale</dt>
+              <dd className={styles.statValue}>48 players · 6 full parties</dd>
             </div>
             <div>
-              <dt className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Status</dt>
-              <dd className="mt-1 text-xl font-semibold text-emerald-200">Ready check pending</dd>
+              <dt className={styles.statLabel}>Status</dt>
+              <dd className={styles.readyValue}>Ready check pending</dd>
             </div>
             <div>
-              <dt className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">PF password</dt>
-              <dd className="mt-1 font-mono text-3xl font-bold tracking-[0.18em] text-pink-100">0420</dd>
+              <dt className={styles.statLabel}>PF password</dt>
+              <dd className={styles.passwordValueBlock}>0420</dd>
             </div>
           </dl>
         </section>
 
-        <section className="grid gap-4 md:grid-cols-5" aria-label="Role summary">
+        <section className={styles.summaryGrid} aria-label="Role summary">
           {roleSummary.map(([role, count, note]) => (
-            <article key={role} className="rounded-3xl border border-white/10 bg-slate-950/70 p-5">
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-200">{role}</p>
-              <p className="mt-3 text-4xl font-bold text-white">{count}</p>
-              <p className="mt-3 text-sm leading-6 text-slate-400">{note}</p>
+            <article key={role} className={styles.summaryCard}>
+              <p className={styles.summaryRole}>{role}</p>
+              <p className={styles.summaryCount}>{count}</p>
+              <p className={styles.summaryNote}>{note}</p>
             </article>
           ))}
         </section>
 
-        <section className="grid gap-6 lg:grid-cols-[0.75fr_1.25fr]">
-          <article className="rounded-[2rem] border border-pink-200/20 bg-pink-950/30 p-6 shadow-xl shadow-pink-950/20">
-            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-pink-200">Party Finder access</p>
-            <h2 className="mt-3 text-3xl font-bold text-white">Password: <span className="font-mono tracking-[0.16em] text-pink-100">0420</span></h2>
-            <p className="mt-4 leading-7 text-slate-300">
+        <section className={styles.detailGrid}>
+          <article className={styles.passwordCard}>
+            <p className={styles.passwordKicker}>Party Finder access</p>
+            <h2 className={styles.passwordTitle}>
+              Password: <span className={styles.passwordValue}>0420</span>
+            </h2>
+            <p className={styles.passwordLead}>
               The organizer will list the first recruitment party in FFXIV Party
               Finder with this four-digit password. Join that listing first, then
               wait for party leads to distribute players into the six planned
@@ -170,23 +173,23 @@ export default function ForkedTowerEventPage() {
             </p>
           </article>
 
-          <article className="rounded-[2rem] border border-white/10 bg-slate-950/75 p-6">
-            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-200">Run timeline</p>
-            <h2 className="mt-3 text-3xl font-bold text-white">Tonight&apos;s plan</h2>
-            <ol className="mt-6 grid gap-4">
+          <article className={styles.timelineCard}>
+            <p className={styles.timelineKicker}>Run timeline</p>
+            <h2 className={styles.timelineTitle}>Tonight&apos;s plan</h2>
+            <ol className={styles.timelineList}>
               {timeline.map(([time, item]) => (
-                <li key={time} className="grid grid-cols-[4.5rem_1fr] gap-4">
-                  <time className="font-mono text-sm font-semibold text-pink-200">{time}</time>
-                  <p className="text-sm leading-6 text-slate-300">{item}</p>
+                <li key={time} className={styles.timelineItem}>
+                  <time className={styles.timelineTime}>{time}</time>
+                  <p className={styles.timelineText}>{item}</p>
                 </li>
               ))}
             </ol>
           </article>
 
-          <article className="rounded-[2rem] border border-white/10 bg-slate-950/75 p-6">
-            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-200">Composition note</p>
-            <h2 className="mt-3 text-3xl font-bold text-white">Balanced, readable, and flexible</h2>
-            <p className="mt-4 leading-7 text-slate-300">
+          <article className={styles.noteCard}>
+            <p className={styles.noteKicker}>Composition note</p>
+            <h2 className={styles.noteTitle}>Balanced, readable, and flexible</h2>
+            <p className={styles.noteText}>
               Forked Tower parties can be flexible, but this mock setup uses a familiar
               two-tank, two-healer, four-DPS structure in each group. That makes party
               health easy to scan, gives every platform dedicated recovery, and keeps
@@ -196,41 +199,41 @@ export default function ForkedTowerEventPage() {
         </section>
 
         <section aria-labelledby="party-rosters">
-          <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div className={styles.sectionHeader}>
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-200">Roster</p>
-              <h2 id="party-rosters" className="mt-2 text-3xl font-bold text-white">48 signed players</h2>
+              <p className={styles.sectionKicker}>Roster</p>
+              <h2 id="party-rosters" className={styles.sectionTitle}>48 signed players</h2>
             </div>
-            <p className="text-sm text-slate-400">Generated names for prototype data</p>
+            <p className={styles.sectionMeta}>Generated names for prototype data</p>
           </div>
 
-          <div className="grid gap-5 xl:grid-cols-2">
+          <div className={styles.partyGrid}>
             {parties.map((party) => (
-              <article key={party.name} className="rounded-[1.75rem] border border-white/10 bg-slate-950/80 p-5">
-                <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
+              <article key={party.name} className={styles.partyCard}>
+                <div className={styles.partyHeader}>
                   <div>
-                    <h3 className="text-2xl font-bold text-white">Party {party.name}</h3>
-                    <p className="mt-1 text-sm text-slate-400">{party.focus}</p>
+                    <h3 className={styles.partyName}>Party {party.name}</h3>
+                    <p className={styles.partyFocus}>{party.focus}</p>
                   </div>
-                  <span className="mt-2 w-fit rounded-full bg-emerald-300/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-200 sm:mt-0">
+                  <span className={styles.partyReady}>
                     8/8 ready
                   </span>
                 </div>
-                <div className="mt-5 overflow-hidden rounded-2xl border border-white/10">
-                  <table className="w-full border-collapse text-left text-sm">
-                    <thead className="bg-white/[0.06] text-xs uppercase tracking-[0.18em] text-slate-400">
+                <div className={styles.tableWrap}>
+                  <table className={styles.table}>
+                    <thead className={styles.tableHead}>
                       <tr>
-                        <th className="px-4 py-3 font-semibold">Role</th>
-                        <th className="px-4 py-3 font-semibold">Job</th>
-                        <th className="px-4 py-3 font-semibold">Player</th>
+                        <th className={styles.tableHeadCell}>Role</th>
+                        <th className={styles.tableHeadCell}>Job</th>
+                        <th className={styles.tableHeadCell}>Player</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-white/10">
+                    <tbody className={styles.tableBody}>
                       {party.roster.map(([role, job, player]) => (
-                        <tr key={player} className="bg-slate-950/30">
-                          <td className="px-4 py-3 text-cyan-100">{role}</td>
-                          <td className="px-4 py-3 text-slate-300">{job}</td>
-                          <td className="px-4 py-3 font-semibold text-white">{player}</td>
+                        <tr key={player} className={styles.tableRow}>
+                          <td className={styles.roleCell}>{role}</td>
+                          <td className={styles.jobCell}>{job}</td>
+                          <td className={styles.playerCell}>{player}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -241,7 +244,7 @@ export default function ForkedTowerEventPage() {
           </div>
         </section>
 
-        <footer className="border-t border-white/10 pb-2 pt-6 text-sm leading-6 text-slate-400">
+        <footer className={styles.footer}>
           <p>
             xiv.today is not affiliated with, endorsed by, sponsored by, or otherwise
             connected to FINAL FANTASY XIV or Square Enix.

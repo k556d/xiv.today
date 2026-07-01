@@ -1,0 +1,27 @@
+@reference "tailwindcss";
+
+.html {
+  @apply h-full;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.body {
+  @apply min-h-full flex flex-col;
+}
+
+.header {
+  @apply flex items-center justify-end px-6 py-4;
+}
+
+@media (min-width: 640px) {
+  .header {
+    @apply px-10;
+  }
+}
+
+@media (min-width: 1024px) {
+  .header {
+    @apply px-16;
+  }
+}

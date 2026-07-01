@@ -1,0 +1,312 @@
+@reference "tailwindcss";
+
+.page {
+  @apply min-h-screen px-6 py-8 text-slate-100;
+  background: radial-gradient(circle at top left, #41246d 0, #111827 35%, #060711 72%);
+}
+
+@media (min-width: 640px) {
+  .page {
+    @apply px-10;
+  }
+}
+
+@media (min-width: 1024px) {
+  .page {
+    @apply px-16;
+  }
+}
+
+.container {
+  @apply mx-auto flex w-full max-w-7xl flex-col gap-8;
+}
+
+.backLink {
+  @apply w-fit rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-cyan-100 transition;
+}
+
+.backLink:hover {
+  @apply border-cyan-200/50 bg-cyan-200/10;
+}
+
+.backLink:focus-visible {
+  outline: 2px solid rgb(165 243 252 / 1);
+  outline-offset: 2px;
+}
+
+.hero {
+  @apply grid gap-6 border border-white/10 bg-slate-950/70 p-6 shadow-2xl shadow-purple-950/40 backdrop-blur;
+  border-radius: 2rem;
+}
+
+@media (min-width: 768px) {
+  .hero {
+    grid-template-columns: 1.25fr 0.75fr;
+    @apply p-10;
+  }
+}
+
+.heroKicker {
+  @apply text-sm font-semibold uppercase text-pink-200;
+  letter-spacing: 0.3em;
+}
+
+.heroTitle {
+  @apply mt-4 text-4xl font-bold tracking-tight text-white;
+}
+
+@media (min-width: 640px) {
+  .heroTitle {
+    @apply text-6xl;
+  }
+}
+
+.heroLead {
+  @apply mt-5 max-w-3xl text-lg leading-8 text-slate-300;
+}
+
+.heroStats {
+  @apply grid gap-3 border border-white/10 bg-white/[0.06] p-5;
+  border-radius: 1.5rem;
+}
+
+.statLabel {
+  @apply text-xs font-semibold uppercase text-slate-400;
+  letter-spacing: 0.2em;
+}
+
+.statValue {
+  @apply mt-1 text-xl font-semibold text-white;
+}
+
+.readyValue {
+  @apply mt-1 text-xl font-semibold text-emerald-200;
+}
+
+.passwordValue {
+  @apply font-mono text-3xl font-bold text-pink-100;
+  letter-spacing: 0.18em;
+}
+
+.passwordValueBlock {
+  @apply mt-1 font-mono text-3xl font-bold text-pink-100;
+  letter-spacing: 0.18em;
+}
+
+.summaryGrid {
+  @apply grid gap-4;
+}
+
+@media (min-width: 768px) {
+  .summaryGrid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+.summaryCard {
+  @apply border border-white/10 bg-slate-950/70 p-5;
+  border-radius: 1.5rem;
+}
+
+.summaryRole {
+  @apply text-sm font-semibold uppercase text-cyan-200;
+  letter-spacing: 0.22em;
+}
+
+.summaryCount {
+  @apply mt-3 text-4xl font-bold text-white;
+}
+
+.summaryNote {
+  @apply mt-3 text-sm leading-6 text-slate-400;
+}
+
+.detailGrid {
+  @apply grid gap-6;
+}
+
+@media (min-width: 1024px) {
+  .detailGrid {
+    grid-template-columns: 0.75fr 1.25fr;
+  }
+}
+
+.passwordCard {
+  @apply border border-pink-200/20 bg-pink-950/30 p-6 shadow-xl shadow-pink-950/20;
+  border-radius: 2rem;
+}
+
+.passwordKicker {
+  @apply text-sm font-semibold uppercase text-pink-200;
+  letter-spacing: 0.25em;
+}
+
+.passwordTitle {
+  @apply mt-3 text-3xl font-bold text-white;
+}
+
+.passwordLead {
+  @apply mt-4 leading-7 text-slate-300;
+}
+
+.timelineCard {
+  @apply border border-white/10 bg-slate-950/75 p-6;
+  border-radius: 2rem;
+}
+
+.timelineKicker {
+  @apply text-sm font-semibold uppercase text-cyan-200;
+  letter-spacing: 0.25em;
+}
+
+.timelineTitle {
+  @apply mt-3 text-3xl font-bold text-white;
+}
+
+.timelineList {
+  @apply mt-6 grid gap-4;
+}
+
+.timelineItem {
+  @apply grid gap-4;
+}
+
+@media (min-width: 640px) {
+  .timelineItem {
+    grid-template-columns: 4.5rem 1fr;
+  }
+}
+
+.timelineTime {
+  @apply font-mono text-sm font-semibold text-pink-200;
+}
+
+.timelineText {
+  @apply text-sm leading-6 text-slate-300;
+}
+
+.noteCard {
+  @apply border border-white/10 bg-slate-950/75 p-6;
+  border-radius: 2rem;
+}
+
+.noteKicker {
+  @apply text-sm font-semibold uppercase text-cyan-200;
+  letter-spacing: 0.25em;
+}
+
+.noteTitle {
+  @apply mt-3 text-3xl font-bold text-white;
+}
+
+.noteText {
+  @apply mt-4 leading-7 text-slate-300;
+}
+
+.sectionHeader {
+  @apply mb-5 flex flex-col gap-2;
+}
+
+@media (min-width: 640px) {
+  .sectionHeader {
+    @apply flex-row items-end justify-between;
+  }
+}
+
+.sectionKicker {
+  @apply text-sm font-semibold uppercase text-cyan-200;
+  letter-spacing: 0.25em;
+}
+
+.sectionTitle {
+  @apply mt-2 text-3xl font-bold text-white;
+}
+
+.sectionMeta {
+  @apply text-sm text-slate-400;
+}
+
+.partyGrid {
+  @apply grid gap-5;
+}
+
+@media (min-width: 1280px) {
+  .partyGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.partyCard {
+  @apply border border-white/10 bg-slate-950/80 p-5;
+  border-radius: 1.75rem;
+}
+
+.partyHeader {
+  @apply flex flex-col gap-1;
+}
+
+@media (min-width: 640px) {
+  .partyHeader {
+    @apply flex-row items-start justify-between;
+  }
+}
+
+.partyName {
+  @apply text-2xl font-bold text-white;
+}
+
+.partyFocus {
+  @apply mt-1 text-sm text-slate-400;
+}
+
+.partyReady {
+  @apply mt-2 w-fit rounded-full bg-emerald-300/10 px-3 py-1 text-xs font-semibold uppercase text-emerald-200;
+  letter-spacing: 0.18em;
+}
+
+@media (min-width: 640px) {
+  .partyReady {
+    @apply mt-0;
+  }
+}
+
+.tableWrap {
+  @apply mt-5 overflow-hidden rounded-2xl border border-white/10;
+}
+
+.table {
+  @apply w-full border-collapse text-left text-sm;
+}
+
+.tableHead {
+  @apply bg-white/[0.06] text-xs uppercase text-slate-400;
+  letter-spacing: 0.18em;
+}
+
+.tableHeadCell {
+  @apply px-4 py-3 font-semibold;
+}
+
+.tableBody {
+  @apply divide-y divide-white/10;
+}
+
+.tableRow {
+  @apply bg-slate-950/30;
+}
+
+.roleCell {
+  @apply px-4 py-3 text-cyan-100;
+}
+
+.jobCell {
+  @apply px-4 py-3 text-slate-300;
+}
+
+.playerCell {
+  @apply px-4 py-3 font-semibold text-white;
+}
+
+.footer {
+  @apply border-t border-white/10 pb-2 pt-6 text-sm leading-6 text-slate-400;
+}

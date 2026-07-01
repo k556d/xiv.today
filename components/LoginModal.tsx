@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { signIn } from "next-auth/react";
 import { register } from "@/server/actions/auth";
+import styles from "./LoginModal.module.css";
 
 type Mode = "choose" | "login" | "register";
 
@@ -59,16 +60,16 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+      className={styles.overlay}
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-sm rounded-2xl border border-white/10 bg-[#12152a] p-8 shadow-2xl"
+        className={styles.panel}
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 text-slate-400 transition hover:text-white"
+          className={styles.closeButton}
           aria-label="Close"
         >
           <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
@@ -76,24 +77,24 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
           </svg>
         </button>
 
-        <h2 className="mb-6 text-center text-xl font-bold text-white">
+        <h2 className={styles.title}>
           {mode === "choose" && "Sign in to xiv.today"}
           {mode === "login" && "Sign in with username"}
           {mode === "register" && "Create an account"}
         </h2>
 
         {mode === "choose" && (
-          <div className="flex flex-col gap-3">
+          <div className={styles.choiceStack}>
             <button
               onClick={() => setMode("login")}
-              className="flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-cyan-100 transition hover:border-cyan-200/50 hover:bg-cyan-200/10"
+              className={styles.choiceButton}
             >
               <UserIcon />
               Continue with username
             </button>
             <button
               onClick={() => signIn("discord")}
-              className="flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-cyan-100 transition hover:border-indigo-400/50 hover:bg-indigo-400/10"
+              className={`${styles.choiceButton} ${styles.choiceButtonDiscord}`}
             >
               <DiscordIcon />
               Continue with Discord
@@ -102,11 +103,11 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
         )}
 
         {(mode === "login" || mode === "register") && (
-          <form onSubmit={handleCredentialsSubmit} className="flex flex-col gap-4">
+          <form onSubmit={handleCredentialsSubmit} className={styles.form}>
             <div>
               <label
                 htmlFor="username"
-                className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400"
+                className={styles.label}
               >
                 Username
               </label>
@@ -118,14 +119,14 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
                 minLength={2}
                 maxLength={32}
                 autoComplete="username"
-                className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-slate-500 outline-none transition focus:border-cyan-200/50 focus:ring-1 focus:ring-cyan-200"
+                className={styles.input}
                 placeholder="Enter your username"
               />
             </div>
             <div>
               <label
                 htmlFor="password"
-                className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400"
+                className={styles.label}
               >
                 Password
               </label>
@@ -136,19 +137,19 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
                 required
                 minLength={8}
                 autoComplete={mode === "register" ? "new-password" : "current-password"}
-                className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-slate-500 outline-none transition focus:border-cyan-200/50 focus:ring-1 focus:ring-cyan-200"
+                className={styles.input}
                 placeholder={mode === "register" ? "At least 8 characters" : "Enter your password"}
               />
             </div>
 
             {error && (
-              <p className="text-center text-xs text-red-400">{error}</p>
+              <p className={styles.error}>{error}</p>
             )}
 
             <button
               type="submit"
               disabled={loading}
-              className="rounded-xl bg-cyan-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-cyan-500 disabled:opacity-50"
+              className={styles.submitButton}
             >
               {loading
                 ? "Please wait…"
@@ -157,7 +158,7 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
                   : "Sign in"}
             </button>
 
-            <p className="text-center text-xs text-slate-400">
+            <p className={styles.helpText}>
               {mode === "login" ? (
                 <>
                   No account?{" "}
@@ -167,7 +168,7 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
                       setMode("register");
                       setError("");
                     }}
-                    className="font-semibold text-cyan-300 hover:underline"
+                    className={styles.helpButton}
                   >
                     Create one
                   </button>
@@ -181,7 +182,7 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
                       setMode("login");
                       setError("");
                     }}
-                    className="font-semibold text-cyan-300 hover:underline"
+                    className={styles.helpButton}
                   >
                     Sign in
                   </button>
@@ -195,7 +196,7 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
                 setMode("choose");
                 setError("");
               }}
-              className="text-xs text-slate-500 transition hover:text-slate-300"
+              className={styles.backButton}
             >
               ← Other sign-in options
             </button>
