@@ -10,7 +10,7 @@
     "lint": "eslint",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:seed": "pnpm dlx tsx db/seed.ts",
+    "db:seed": "pnpm dlx tsx server/db/seed.ts",
     "db:setup": "pnpm run db:migrate && pnpm run db:seed"
   },
   "dependencies": {
