@@ -12,6 +12,7 @@
 # Pull requests
 
 - When creating or editing GitHub PR bodies, use real multiline text or a body file. Do not pass literal `\n` escape sequences in the PR description.
+- Always squash-merge PRs unless the user explicitly asks for a different merge strategy.
 - When merging a PR, delete the branch after merge unless it is still needed.
 - When squash-merging a PR, use the subject format `Commit message (#pr_number)`.
 - After a branch is merged, automatically pull `main` to keep the local branch up to date.
