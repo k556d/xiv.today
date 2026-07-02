@@ -81,6 +81,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Discord({
       authorization: { params: { scope: "identify" } },
+      profile(profile) {
+        return {
+          id: String(profile.id),
+        };
+      },
     }),
     Credentials({
       credentials: {
@@ -116,7 +121,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         email?: string | null;
       };
 
-      if (user) {
+      if (user && account?.provider === "credentials") {
         authToken.userId = user.id;
         authToken.username = user.name ?? null;
         authToken.email = user.email ?? null;
@@ -147,7 +152,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (session.user) {
         session.user.id = typeof authToken.userId === "string" ? authToken.userId : session.user.id;
         session.user.username = typeof authToken.username === "string" ? authToken.username : null;
-        session.user.name = session.user.username ?? session.user.name ?? null;
+        session.user.name = session.user.username ?? null;
         session.user.email = typeof authToken.email === "string" ? authToken.email : session.user.email;
       }
 
