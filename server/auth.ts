@@ -45,6 +45,18 @@ async function syncOAuthAccount({
 
   let userId = currentUserId;
 
+  if (userId) {
+    const [existingUser] = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
+
+    if (!existingUser) {
+      userId = undefined;
+    }
+  }
+
   if (!userId) {
     const [createdUser] = await db
       .insert(users)
