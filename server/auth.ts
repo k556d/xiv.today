@@ -2,9 +2,68 @@ import NextAuth from "next-auth";
 import Discord from "next-auth/providers/discord";
 import Credentials from "next-auth/providers/credentials";
 import { db } from "@/server/db";
-import { users } from "@/server/db/schema";
-import { eq } from "drizzle-orm";
+import { accounts, users } from "@/server/db/schema";
+import { and, eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
+
+type OAuthAccount = {
+  provider: string;
+  providerAccountId: string;
+};
+
+async function getUserById(userId: string) {
+  const [user] = await db
+    .select({ id: users.id, username: users.username, email: users.email })
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1);
+
+  return user ?? null;
+}
+
+async function syncOAuthAccount({
+  account,
+  currentUserId,
+}: {
+  account: OAuthAccount;
+  currentUserId?: string;
+}) {
+  const [linkedAccount] = await db
+    .select({ userId: accounts.userId })
+    .from(accounts)
+    .where(
+      and(
+        eq(accounts.provider, account.provider),
+        eq(accounts.providerAccountId, account.providerAccountId),
+      ),
+    )
+    .limit(1);
+
+  if (linkedAccount) {
+    return getUserById(linkedAccount.userId);
+  }
+
+  let userId = currentUserId;
+
+  if (!userId) {
+    const [createdUser] = await db
+      .insert(users)
+      .values({ username: null })
+      .returning({ id: users.id, username: users.username, email: users.email });
+
+    userId = createdUser.id;
+  }
+
+  const resolvedUserId = userId as string;
+
+  await db.insert(accounts).values({
+    userId: resolvedUserId,
+    provider: account.provider,
+    providerAccountId: account.providerAccountId,
+  });
+
+  return getUserById(resolvedUserId);
+}
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
@@ -24,19 +83,65 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const [user] = await db
           .select()
           .from(users)
-          .where(eq(users.name, username))
+          .where(eq(users.username, username))
           .limit(1);
 
-        if (!user?.password) return null;
+        if (!user?.passwordHash) return null;
 
-        const valid = await bcrypt.compare(password, user.password);
+        const valid = await bcrypt.compare(password, user.passwordHash);
         if (!valid) return null;
 
-        return { id: user.id, name: user.name, email: user.email };
+        return { id: user.id, name: user.username, email: user.email };
       },
     }),
   ],
   session: { strategy: "jwt" },
+  callbacks: {
+    async jwt({ token, user, account, profile }) {
+      const authToken = token as typeof token & {
+        userId?: string;
+        username?: string | null;
+        email?: string | null;
+      };
+
+      if (user) {
+        authToken.userId = user.id;
+        authToken.username = user.name ?? null;
+        authToken.email = user.email ?? null;
+      }
+
+      if (account?.provider && account.provider !== "credentials" && profile) {
+        const syncedUser = await syncOAuthAccount({
+          account,
+          currentUserId: typeof authToken.userId === "string" ? authToken.userId : undefined,
+        });
+
+        if (syncedUser) {
+          authToken.userId = syncedUser.id;
+          authToken.username = syncedUser.username ?? null;
+          authToken.email = syncedUser.email ?? null;
+        }
+      }
+
+      return authToken;
+    },
+    async session({ session, token }) {
+      const authToken = token as typeof token & {
+        userId?: string;
+        username?: string | null;
+        email?: string | null;
+      };
+
+      if (session.user) {
+        session.user.id = typeof authToken.userId === "string" ? authToken.userId : session.user.id;
+        session.user.username = typeof authToken.username === "string" ? authToken.username : null;
+        session.user.name = session.user.username ?? session.user.name ?? null;
+        session.user.email = typeof authToken.email === "string" ? authToken.email : session.user.email;
+      }
+
+      return session;
+    },
+  },
   pages: {
     signIn: "/",
   },

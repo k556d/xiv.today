@@ -39,7 +39,7 @@ export async function register(formData: FormData): Promise<RegisterResult> {
     const [existing] = await db
       .select({ id: users.id })
       .from(users)
-      .where(eq(users.name, trimmed))
+      .where(eq(users.username, trimmed))
       .limit(1);
 
     if (existing) {
@@ -47,7 +47,7 @@ export async function register(formData: FormData): Promise<RegisterResult> {
     }
 
     const hash = await bcrypt.hash(password, 10);
-    await db.insert(users).values({ name: trimmed, password: hash });
+    await db.insert(users).values({ username: trimmed, passwordHash: hash });
 
     return { success: true };
   } catch {

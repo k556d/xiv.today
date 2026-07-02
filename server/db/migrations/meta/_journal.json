@@ -6,21 +6,21 @@
       "idx": 0,
       "version": "7",
       "when": 1780971983312,
-      "tag": "0000_orange_sersi",
+      "tag": "0000_create_users",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "7",
       "when": 1781005091342,
-      "tag": "0001_sticky_blackheart",
+      "tag": "0001_create_accounts",
       "breakpoints": true
     },
     {
       "idx": 2,
       "version": "7",
       "when": 1781279493000,
-      "tag": "0002_add_user_password",
+      "tag": "0002_create_events",
       "breakpoints": true
     }
   ]
