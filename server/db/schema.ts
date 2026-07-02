@@ -9,8 +9,8 @@ export const users = pgTable("users", {
   passwordHash: text("password_hash"),
 });
 
-export const accounts = pgTable(
-  "accounts",
+export const authAccounts = pgTable(
+  "auth_accounts",
   {
     userId: text("user_id")
       .notNull()

@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import Discord from "next-auth/providers/discord";
 import Credentials from "next-auth/providers/credentials";
 import { db } from "@/server/db";
-import { accounts, users } from "@/server/db/schema";
+import { authAccounts, users } from "@/server/db/schema";
 import { and, eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 
@@ -29,12 +29,12 @@ async function syncOAuthAccount({
   currentUserId?: string;
 }) {
   const [linkedAccount] = await db
-    .select({ userId: accounts.userId })
-    .from(accounts)
+    .select({ userId: authAccounts.userId })
+    .from(authAccounts)
     .where(
       and(
-        eq(accounts.provider, account.provider),
-        eq(accounts.providerAccountId, account.providerAccountId),
+        eq(authAccounts.provider, account.provider),
+        eq(authAccounts.providerAccountId, account.providerAccountId),
       ),
     )
     .limit(1);
@@ -56,7 +56,7 @@ async function syncOAuthAccount({
 
   const resolvedUserId = userId as string;
 
-  await db.insert(accounts).values({
+  await db.insert(authAccounts).values({
     userId: resolvedUserId,
     provider: account.provider,
     providerAccountId: account.providerAccountId,
