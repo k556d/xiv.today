@@ -1,53 +1,48 @@
-import {
-  pgTable,
-  serial,
-  text,
-  timestamp,
-  integer,
-  primaryKey,
-} from "drizzle-orm/pg-core";
-import type { AdapterAccountType } from "next-auth/adapters";
+import { pgTable, text, index, uniqueIndex, primaryKey } from "drizzle-orm/pg-core";
 
-export const events = pgTable("events", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  date: text("date").notNull(),
-  organizer: text("organizer").notNull(),
-  description: text("description").notNull(),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-});
+export const users = pgTable(
+  "users",
+  {
+    id: text("id")
+      .notNull()
+      .$defaultFn(() => crypto.randomUUID()),
+    email: text("email").unique("users_email_unique"),
+    username: text("username").unique("users_username_unique"),
+    passwordHash: text("password_hash"),
+  },
+  (user) => [primaryKey({ columns: [user.id], name: "users_pkey" })],
+);
 
-export const users = pgTable("users", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  name: text("name"),
-  email: text("email"),
-  emailVerified: timestamp("email_verified", { mode: "date" }),
-  image: text("image"),
-  password: text("password"),
-});
-
-export const accounts = pgTable(
-  "accounts",
+export const authAccounts = pgTable(
+  "auth_accounts",
   {
     userId: text("user_id")
       .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-    type: text("type").$type<AdapterAccountType>().notNull(),
+      .references(() => users.id, { onDelete: "cascade", name: "auth_accounts_user_id_fkey" }),
     provider: text("provider").notNull(),
     providerAccountId: text("provider_account_id").notNull(),
-    refresh_token: text("refresh_token"),
-    access_token: text("access_token"),
-    expires_at: integer("expires_at"),
-    token_type: text("token_type"),
-    scope: text("scope"),
-    id_token: text("id_token"),
-    session_state: text("session_state"),
   },
   (account) => [
-    primaryKey({ columns: [account.provider, account.providerAccountId] }),
+    primaryKey({ columns: [account.provider, account.providerAccountId], name: "auth_accounts_pkey" }),
+    uniqueIndex("auth_accounts_user_id_provider_unique").on(account.userId, account.provider),
+  ],
+);
+
+export const events = pgTable(
+  "events",
+  {
+    id: text("id")
+      .notNull()
+      .$defaultFn(() => crypto.randomUUID()),
+    organizerId: text("organizer_id")
+      .notNull()
+      .references(() => users.id, { name: "events_organizer_id_fkey" }),
+    name: text("name"),
+    date: text("date"),
+    description: text("description"),
+  },
+  (event) => [
+    primaryKey({ columns: [event.id], name: "events_pkey" }),
+    index("events_organizer_id_idx").on(event.organizerId),
   ],
 );

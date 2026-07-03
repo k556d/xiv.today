@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { signIn } from "next-auth/react";
 import { register } from "@/server/actions/auth";
+import { useAuth } from "./AuthProvider";
 import styles from "./LoginModal.module.css";
 
 type Mode = "choose" | "login" | "register";
@@ -11,6 +11,7 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
   const [mode, setMode] = useState<Mode>("choose");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const { refresh } = useAuth();
 
   const handleCredentialsSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
@@ -19,8 +20,6 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
       setLoading(true);
 
       const form = new FormData(e.currentTarget);
-      const username = form.get("username") as string;
-      const password = form.get("password") as string;
 
       try {
         if (mode === "register") {
@@ -32,13 +31,12 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
           }
         }
 
-        const res = await signIn("credentials", {
-          username,
-          password,
-          redirect: false,
+        const res = await fetch("/api/auth/credentials", {
+          method: "POST",
+          body: form,
         });
 
-        if (res?.error) {
+        if (!res.ok) {
           setError(
             mode === "register"
               ? "Account created but login failed. Try signing in."
@@ -46,8 +44,8 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
           );
           if (mode === "register") setMode("login");
         } else {
+          await refresh();
           onClose();
-          window.location.reload();
         }
       } catch {
         setError("Something went wrong. Please try again.");
@@ -55,7 +53,7 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
         setLoading(false);
       }
     },
-    [mode, onClose],
+    [mode, onClose, refresh],
   );
 
   return (
@@ -93,7 +91,12 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
               Continue with username
             </button>
             <button
-              onClick={() => signIn("discord")}
+              onClick={() => {
+                const returnTo = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+                window.location.assign(
+                  `/api/auth/discord/start?returnTo=${encodeURIComponent(returnTo)}`,
+                );
+              }}
               className={`${styles.choiceButton} ${styles.choiceButtonDiscord}`}
             >
               <DiscordIcon />
