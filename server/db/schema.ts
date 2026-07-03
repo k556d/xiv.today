@@ -20,7 +20,7 @@ export const authAccounts = pgTable(
   },
   (account) => [
     primaryKey({ columns: [account.provider, account.providerAccountId] }),
-    uniqueIndex("accounts_user_id_provider_unique").on(account.userId, account.provider),
+    uniqueIndex("auth_accounts_user_id_provider_unique").on(account.userId, account.provider),
   ],
 );
 

@@ -1,9 +1,9 @@
 "use server";
 
+import { createPasswordHash } from "@/server/auth";
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
-import bcrypt from "bcryptjs";
 
 export type RegisterResult =
   | { success: true }
@@ -46,7 +46,7 @@ export async function register(formData: FormData): Promise<RegisterResult> {
       return { success: false, error: "Username is already taken." };
     }
 
-    const hash = await bcrypt.hash(password, 10);
+    const hash = await createPasswordHash(password);
     await db.insert(users).values({ username: trimmed, passwordHash: hash });
 
     return { success: true };
