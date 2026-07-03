@@ -1,9 +1,9 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "6d596833-f4ca-46e3-bca8-d3b64dd9c8d8",
+  "id": "d47cb66a-cd12-4b32-acff-cab451600739",
   "prevIds": [
-    "20000000-0000-4000-8000-000000000000"
+    "448c94b3-9aa1-43ab-928c-19b4b8dacbc0"
   ],
   "ddl": [
     {
@@ -84,7 +84,7 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "organizer",
+      "name": "organizer_id",
       "entityType": "columns",
       "schema": "public",
       "table": "events"
@@ -212,7 +212,7 @@
       "nameExplicit": true,
       "columns": [
         {
-          "value": "organizer",
+          "value": "organizer_id",
           "isExpression": false,
           "asc": true,
           "nullsFirst": false,
@@ -224,13 +224,13 @@
       "with": "",
       "method": "btree",
       "concurrently": false,
-      "name": "events_organizer_idx",
+      "name": "events_organizer_id_idx",
       "entityType": "indexes",
       "schema": "public",
       "table": "events"
     },
     {
-      "nameExplicit": false,
+      "nameExplicit": true,
       "columns": [
         "user_id"
       ],
@@ -241,15 +241,15 @@
       ],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
-      "name": "auth_accounts_user_id_users_id_fk",
+      "name": "auth_accounts_user_id_fkey",
       "entityType": "fks",
       "schema": "public",
       "table": "auth_accounts"
     },
     {
-      "nameExplicit": false,
+      "nameExplicit": true,
       "columns": [
-        "organizer"
+        "organizer_id"
       ],
       "schemaTo": "public",
       "tableTo": "users",
@@ -258,7 +258,7 @@
       ],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
-      "name": "events_organizer_users_id_fkey",
+      "name": "events_organizer_id_fkey",
       "entityType": "fks",
       "schema": "public",
       "table": "events"
@@ -268,8 +268,8 @@
         "provider",
         "provider_account_id"
       ],
-      "nameExplicit": false,
-      "name": "auth_accounts_provider_provider_account_id_pk",
+      "nameExplicit": true,
+      "name": "auth_accounts_pkey",
       "entityType": "pks",
       "schema": "public",
       "table": "auth_accounts"
@@ -278,24 +278,24 @@
       "columns": [
         "id"
       ],
-      "nameExplicit": false,
+      "nameExplicit": true,
       "name": "events_pkey",
+      "entityType": "pks",
       "schema": "public",
-      "table": "events",
-      "entityType": "pks"
+      "table": "events"
     },
     {
       "columns": [
         "id"
       ],
-      "nameExplicit": false,
+      "nameExplicit": true,
       "name": "users_pkey",
+      "entityType": "pks",
       "schema": "public",
-      "table": "users",
-      "entityType": "pks"
+      "table": "users"
     },
     {
-      "nameExplicit": false,
+      "nameExplicit": true,
       "columns": [
         "email"
       ],
@@ -306,7 +306,7 @@
       "entityType": "uniques"
     },
     {
-      "nameExplicit": false,
+      "nameExplicit": true,
       "columns": [
         "username"
       ],

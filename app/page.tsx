@@ -7,17 +7,12 @@ export const dynamic = "force-dynamic";
 
 const forkedTowerHref = "/events/forked-tower";
 
-async function getEvents() {
-  if (!process.env.DATABASE_URL) return [];
-  try {
-    return await db.select().from(events);
-  } catch {
-    return [];
-  }
-}
-
 export default async function Home() {
-  const upcomingEvents = await getEvents();
+  const upcomingEvents = await db.query.events.findMany({
+    with: {
+      organizer: true,
+    },
+  });
 
   return (
     <main className={styles.page}>
@@ -64,7 +59,9 @@ export default async function Home() {
                         <p className={styles.eventMetaKicker}>
                           {event.date}
                         </p>
-                        <p className={styles.eventOrganizer}>{event.organizer}</p>
+                        <p className={styles.eventOrganizer}>
+                          {event.organizer?.username ?? event.organizerId}
+                        </p>
                       </div>
                       <div>
                         <div className={styles.eventHeading}>

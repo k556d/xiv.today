@@ -1,26 +1,16 @@
 {
-  "id": "10000000-0000-4000-8000-000000000000",
+  "version": "8",
+  "dialect": "postgres",
+  "id": "b70222e0-b1af-4ea2-9320-97f50538507a",
   "prevIds": [
     "00000000-0000-0000-0000-000000000000"
   ],
-  "version": "8",
-  "dialect": "postgres",
   "ddl": [
     {
       "isRlsEnabled": false,
       "name": "users",
-      "schema": "public",
-      "entityType": "tables"
-    },
-    {
-      "columns": [
-        "id"
-      ],
-      "nameExplicit": false,
-      "name": "users_pkey",
-      "schema": "public",
-      "table": "users",
-      "entityType": "pks"
+      "entityType": "tables",
+      "schema": "public"
     },
     {
       "type": "text",
@@ -31,22 +21,9 @@
       "generated": null,
       "identity": null,
       "name": "id",
+      "entityType": "columns",
       "schema": "public",
-      "table": "users",
-      "entityType": "columns"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "username",
-      "schema": "public",
-      "table": "users",
-      "entityType": "columns"
+      "table": "users"
     },
     {
       "type": "text",
@@ -57,9 +34,22 @@
       "generated": null,
       "identity": null,
       "name": "email",
+      "entityType": "columns",
       "schema": "public",
-      "table": "users",
-      "entityType": "columns"
+      "table": "users"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "username",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "users"
     },
     {
       "type": "text",
@@ -70,28 +60,38 @@
       "generated": null,
       "identity": null,
       "name": "password_hash",
+      "entityType": "columns",
       "schema": "public",
-      "table": "users",
-      "entityType": "columns"
+      "table": "users"
     },
     {
-      "nameExplicit": false,
       "columns": [
-        "username"
+        "id"
       ],
-      "nullsNotDistinct": false,
-      "name": "users_username_unique",
+      "nameExplicit": true,
+      "name": "users_pkey",
+      "entityType": "pks",
       "schema": "public",
-      "table": "users",
-      "entityType": "uniques"
+      "table": "users"
     },
     {
-      "nameExplicit": false,
+      "nameExplicit": true,
       "columns": [
         "email"
       ],
       "nullsNotDistinct": false,
       "name": "users_email_unique",
+      "schema": "public",
+      "table": "users",
+      "entityType": "uniques"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "username"
+      ],
+      "nullsNotDistinct": false,
+      "name": "users_username_unique",
       "schema": "public",
       "table": "users",
       "entityType": "uniques"
