@@ -7,12 +7,16 @@
   @apply animate-pulse;
 }
 
-.signInButton {
+.guestActions {
   @apply flex items-center;
-  @apply gap-2 px-4 py-2;
+  @apply gap-3;
+}
+
+.signInButton {
+  @apply px-4 py-2;
   @apply border rounded-full border-white/10;
   @apply text-sm font-semibold;
-  @apply bg-white/6 text-cyan-100;
+  @apply bg-white/6 text-slate-100;
   @apply transition;
 }
 
@@ -25,12 +29,30 @@
   @apply outline-2 outline-offset-2 outline-cyan-200;
 }
 
+.connectButton {
+  @apply flex items-center;
+  @apply gap-2 px-4 py-2;
+  @apply border rounded-full border-white/10;
+  @apply text-sm font-semibold;
+  @apply bg-white/6 text-cyan-100;
+  @apply transition;
+}
+
+.connectButton:hover {
+  @apply border-cyan-200/50;
+  @apply bg-cyan-200/10;
+}
+
+.connectButton:focus-visible {
+  @apply outline-2 outline-offset-2 outline-cyan-200;
+}
+
 .userMenu {
-  @apply relative flex items-center;
+  @apply flex items-center;
   @apply gap-3;
 }
 
-.statusBadge {
+.characterBadge {
   @apply flex h-9 items-center;
   @apply gap-2 px-3;
   @apply border rounded-full border-white/20;
@@ -38,9 +60,50 @@
   @apply bg-white/8 text-slate-100;
 }
 
-.statusIcon {
-  @apply h-4 w-4;
-  @apply text-cyan-300;
+.avatar {
+  @apply h-5 w-5;
+  @apply rounded-full;
+  @apply bg-slate-800;
+}
+
+.characterName {
+  @apply max-w-[12rem];
+  @apply truncate;
+}
+
+.noCharacter {
+  @apply px-3 py-1.5;
+  @apply text-xs font-semibold;
+  @apply text-slate-400;
+}
+
+.characterSelector {
+  @apply max-w-40;
+  @apply px-3 py-1.5;
+  @apply rounded-full border border-white/10 outline-none;
+  @apply text-xs font-semibold;
+  @apply bg-white/6 text-slate-100;
+}
+
+.characterSelector:focus-visible {
+  @apply border-cyan-200/50 ring-1 ring-cyan-200;
+}
+
+.loginMethodsLink {
+  @apply px-3 py-1.5;
+  @apply border rounded-full border-white/10;
+  @apply text-xs font-semibold;
+  @apply bg-white/6 text-cyan-100;
+  @apply transition;
+}
+
+.loginMethodsLink:hover {
+  @apply border-cyan-200/50;
+  @apply bg-cyan-200/10;
+}
+
+.loginMethodsLink:focus-visible {
+  @apply outline-2 outline-offset-2 outline-cyan-200;
 }
 
 .signOutButton {
