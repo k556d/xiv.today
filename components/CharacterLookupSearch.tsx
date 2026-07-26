@@ -5,7 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useEffect, useState } from "react";
 import { FiChevronDown, FiCheck, FiCopy } from "react-icons/fi";
-import { createCharacterVerificationChallenge, verifyCharacter } from "@/app/characters/select/actions";
+import { createCharacterVerificationChallenge } from "@/app/characters/select/actions/create-character-verification-challenge";
+import { verifyCharacter } from "@/app/characters/select/actions/verify-character";
 import styles from "./CharacterLookupSearch.module.css";
 
 const messages = {
@@ -73,9 +74,15 @@ export default function CharacterLookupSearch({
       setCodeCopied(false);
 
       try {
-        const result = await createCharacterVerificationChallenge(selectedCharacter.id);
-        if (!result.ok) {
-          throw new Error(result.error);
+        const result = await createCharacterVerificationChallenge({ characterId: selectedCharacter.id });
+        if ("error" in result) {
+          if (!cancelled) {
+            setVerificationResult({
+              status: "failed",
+              message: result.error.message,
+            });
+          }
+          return;
         }
 
         if (!cancelled) {
@@ -103,7 +110,7 @@ export default function CharacterLookupSearch({
   }, [selectedCharacter]);
 
   async function submitVerification(skipProfileCheck: boolean) {
-    if (!selectedCharacter) {
+    if (!selectedCharacter?.avatarUrl) {
       return;
     }
 
@@ -120,17 +127,17 @@ export default function CharacterLookupSearch({
         skipProfileCheck,
       });
 
-      if (!result.ok) {
+      if ("error" in result) {
         setVerificationResult({
           status: "failed",
-          message: result.error ?? messages.verificationFailed,
+          message: result.error.message,
         });
         return;
       }
 
       setVerificationResult({
-        status: result.verified ? "verified" : "failed",
-        message: result.message ?? (result.verified ? "Verification matched." : "Verification did not match."),
+        status: "verified",
+        message: result.message,
       });
 
     } catch {
@@ -314,7 +321,7 @@ export default function CharacterLookupSearch({
               <button
                 type="button"
                 className={styles.copyButton}
-                disabled={challengeLoading || !verificationCode}
+                disabled={challengeLoading || !verificationCode || !selectedCharacter.avatarUrl}
                 onClick={async () => {
                   if (!verificationCode) {
                     return;
@@ -337,7 +344,7 @@ export default function CharacterLookupSearch({
           <button
             type="button"
             className={styles.verifyButton}
-            disabled={verificationLoading || challengeLoading || !verificationCode}
+            disabled={verificationLoading || challengeLoading || !verificationCode || !selectedCharacter.avatarUrl}
             onClick={() => {
               void submitVerification(false);
             }}
@@ -348,7 +355,7 @@ export default function CharacterLookupSearch({
           <button
             type="button"
             className={styles.skipVerifyButton}
-            disabled={verificationLoading || challengeLoading || !verificationCode}
+            disabled={verificationLoading || challengeLoading || !verificationCode || !selectedCharacter.avatarUrl}
             onClick={() => {
               void submitVerification(true);
             }}

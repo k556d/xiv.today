@@ -1,28 +1,43 @@
-import { type NextRequest } from "next/server";
+import { z } from "zod";
 import { cookies } from "@/server/cookie-definitions";
 import { requireOAuthUser } from "@/server/linked-auth";
-import { redirectToAuth, redirectToReturnTo } from "@/server/oauth/callback";
+import { getAuthErrorUrl, getReturnToUrl } from "@/server/oauth/callback";
 import { verifyOAuthResult } from "@/server/oauth/result";
+import { createRouteHandler } from "@/server/route-handler";
 
-export async function GET(request: NextRequest) {
-  const resultToken = request.nextUrl.searchParams.get("result");
-  const flow = await cookies.authFlow.get(request.cookies);
+const signInCallbackDefinition = {
+  query: z.object({
+    result: z.string(),
+  }),
+  cookies: {
+    authFlow: { cookie: cookies.authFlow, access: "read-write" },
+    session: { cookie: cookies.session, access: "write" },
+  },
+} as const;
 
-  if (flow.intent !== "sign-in" || !resultToken) {
-    return redirectToAuth(flow.returnTo, "oauth-expired");
+export const GET = createRouteHandler(signInCallbackDefinition, async ({ query, cookies, redirect }) => {
+  const flow = cookies.authFlow.value;
+  const resultToken = query.result;
+  cookies.authFlow.clear();
+
+  if (flow.intent !== "sign-in") {
+    return redirect(getAuthErrorUrl(flow.returnTo, "oauth-expired"));
   }
 
   const result = await verifyOAuthResult(resultToken);
   if (result.nonce !== flow.nonce) {
-    return redirectToAuth(flow.returnTo, "oauth-expired");
+    return redirect(getAuthErrorUrl(flow.returnTo, "oauth-expired"));
   }
 
   if (result.type === "error") {
-    return redirectToAuth(flow.returnTo, result.error);
+    if (result.error === "oauth-cancelled") {
+      return redirect(getAuthErrorUrl(flow.returnTo, "oauth-cancelled"));
+    }
+
+    return redirect(getAuthErrorUrl(flow.returnTo, "oauth-expired"));
   }
 
   const userId = await requireOAuthUser(result);
-  const response = redirectToReturnTo(flow.returnTo);
-  await cookies.session.set(response.cookies, { userId, selectedCharacterId: null });
-  return response;
-}
+  cookies.session.set({ userId, selectedCharacterId: null });
+  return redirect(getReturnToUrl(flow.returnTo));
+});

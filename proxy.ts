@@ -6,7 +6,15 @@ const unsafeMethods = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 
 export function proxy(request: NextRequest) {
   if (unsafeMethods.has(request.method) && request.headers.get("origin") !== getAppOrigin().origin) {
-    return respondJson({ body: { error: "Invalid request origin." }, status: 403 });
+    return respondJson({
+      body: {
+        error: {
+          code: "invalid-request-origin",
+          message: "Invalid request origin.",
+        },
+      },
+      status: 403,
+    });
   }
 
   return NextResponse.next();

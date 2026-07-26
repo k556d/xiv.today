@@ -1,29 +1,21 @@
 import { generateCodeVerifier, generateState } from "arctic";
-import { NextResponse, type NextRequest } from "next/server";
 import { cookies } from "@/server/cookie-definitions";
 import { createOAuth, scopes } from "@/server/oauth/google";
 import { oauthRequestSchema } from "@/server/oauth/request";
-import { respondJson } from "@/server/respond-json";
+import { createRouteHandler } from "@/server/route-handler";
 
-const responses = {
-  invalidRequest: { body: { error: "Invalid OAuth request." }, status: 400 },
+const googleOAuthStartDefinition = {
+  query: oauthRequestSchema,
+  cookies: {
+    oauth: { cookie: cookies.oauth, access: "write" },
+  },
 } as const;
 
-export async function GET(request: NextRequest) {
-  const oauthRequest = oauthRequestSchema.safeParse({
-    callbackUrl: request.nextUrl.searchParams.get("callbackUrl"),
-    nonce: request.nextUrl.searchParams.get("nonce"),
-  });
-
-  if (!oauthRequest.success) {
-    return respondJson(responses.invalidRequest);
-  }
-
+export const GET = createRouteHandler(googleOAuthStartDefinition, async ({ query, cookies, redirect }) => {
   const state = generateState();
   const codeVerifier = generateCodeVerifier();
   const google = createOAuth();
   const authorizationUrl = google.createAuthorizationURL(state, codeVerifier, [...scopes]);
-  const response = NextResponse.redirect(String(authorizationUrl));
-  await cookies.oauth.set(response.cookies, { state, codeVerifier, ...oauthRequest.data });
-  return response;
-}
+  cookies.oauth.set({ state, codeVerifier, ...query });
+  return redirect(authorizationUrl);
+});

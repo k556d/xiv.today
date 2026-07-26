@@ -1,34 +1,47 @@
-import { type NextRequest } from "next/server";
+import { z } from "zod";
+import { getOAuthProviderUrl, oauthProviderSchema } from "@/server/auth-oauth";
 import { cookies } from "@/server/cookie-definitions";
-import { oauthProviderSchema, redirectToOAuthProvider } from "@/server/auth-oauth";
-import { respondJson } from "@/server/respond-json";
+import { createRouteHandler } from "@/server/route-handler";
 
-const responses = {
-  invalidProvider: { body: { error: "Invalid OAuth provider." }, status: 400 },
-  signInFirst: { body: { error: "Sign in first." }, status: 401 },
+const linkStartDefinition = {
+  body: z.object({
+    provider: oauthProviderSchema,
+    returnTo: z.string().default("/settings/login-methods"),
+  }),
+  cookies: {
+    session: { cookie: cookies.session, access: "read", optional: true },
+    authFlow: { cookie: cookies.authFlow, access: "write" },
+  },
+  errors: {
+    signInFirst: {
+      status: 401,
+      body: {
+        error: {
+          code: "sign-in-first",
+          message: "Sign in first.",
+        },
+      },
+    },
+  },
 } as const;
 
-export async function POST(request: NextRequest) {
-  const formData = await request.formData();
-  const provider = oauthProviderSchema.safeParse(formData.get("provider"));
-  const returnToValue = formData.get("returnTo");
-  const session = await cookies.session.get(request.cookies, { allowMissing: true });
-
-  if (!provider.success) {
-    return respondJson(responses.invalidProvider);
-  }
+export const POST = createRouteHandler(linkStartDefinition, async ({ body, cookies, errors, redirect }) => {
+  const session = cookies.session.value;
 
   if (!session) {
-    return respondJson(responses.signInFirst);
+    throw errors.signInFirst();
   }
 
   const nonce = crypto.randomUUID();
-  const response = redirectToOAuthProvider(provider.data, "/api/auth/link/callback", nonce);
-  await cookies.authFlow.set(response.cookies, {
+  cookies.authFlow.set({
     intent: "link",
     nonce,
-    returnTo: typeof returnToValue === "string" ? returnToValue : "/settings/login-methods",
+    returnTo: body.returnTo,
     userId: session.userId,
   });
-  return response;
-}
+  return redirect(getOAuthProviderUrl(
+    body.provider,
+    "/api/auth/link/callback",
+    nonce,
+  ), 303);
+});

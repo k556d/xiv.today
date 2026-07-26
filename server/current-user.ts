@@ -2,6 +2,7 @@ import { cache } from "react";
 import { cookies as getRequestCookies } from "next/headers";
 import { unauthorized } from "next/navigation";
 import { eq } from "drizzle-orm";
+import { deserializeCookie } from "@/server/cookie-factories";
 import { cookies } from "@/server/cookie-definitions";
 import { db } from "@/server/db";
 import { characters, users } from "@/server/db/schema";
@@ -46,11 +47,13 @@ export async function getCurrentUserForSession(userId: string, selectedCharacter
 
 export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
   const cookieStore = await getRequestCookies();
-  const session = await cookies.session.get(cookieStore, { allowMissing: true });
+  const sessionValue = cookieStore.get(cookies.session.name)?.value;
 
-  if (!session) {
+  if (!sessionValue) {
     return null;
   }
+
+  const session = await deserializeCookie(cookies.session, sessionValue);
 
   return getCurrentUserForSession(session.userId, session.selectedCharacterId);
 });

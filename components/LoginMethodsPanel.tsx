@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { FaDiscord, FaGoogle } from "react-icons/fa6";
-import { cancelEmailChallenge, sendEmailChallenge, verifyEmailChallenge } from "@/app/actions/auth";
+import { cancelEmailChallenge } from "@/app/actions/auth/cancel-email-challenge";
+import { sendEmailChallenge } from "@/app/actions/auth/send-email-challenge";
+import { verifyEmailChallenge } from "@/app/actions/auth/verify-email-challenge";
 import { updateCredentials } from "@/app/settings/login-methods/actions";
 import styles from "./LoginMethodsPanel.module.css";
 
@@ -62,10 +64,10 @@ export default function LoginMethodsPanel({
     setError("");
 
     try {
-      const result = await updateCredentials(nextUsername, password);
+      const result = await updateCredentials({ username: nextUsername, password });
 
-      if (!result.ok) {
-        setError(result.error ?? messages.credentialsSaveFailed);
+      if ("error" in result) {
+        setError(result.error.message);
         return;
       }
 
@@ -87,10 +89,10 @@ export default function LoginMethodsPanel({
     setError("");
 
     try {
-      const result = await sendEmailChallenge(nextEmail, "email-change");
+      const result = await sendEmailChallenge({ email: nextEmail, purpose: "email-change" });
 
-      if (!result.ok) {
-        setError(result.error ?? messages.codeSendFailed);
+      if (result?.error) {
+        setError(result.error.message);
         return;
       }
 
@@ -109,10 +111,10 @@ export default function LoginMethodsPanel({
     setError("");
 
     try {
-      const result = await verifyEmailChallenge(emailCode);
+      const result = await verifyEmailChallenge({ code: emailCode });
 
-      if (!result.ok) {
-        setError(result.error);
+      if (result?.error) {
+        setError(result.error.message);
         return;
       }
 

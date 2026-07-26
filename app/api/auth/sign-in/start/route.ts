@@ -1,27 +1,28 @@
-import { type NextRequest } from "next/server";
+import { z } from "zod";
+import { getOAuthProviderUrl, oauthProviderSchema } from "@/server/auth-oauth";
 import { cookies } from "@/server/cookie-definitions";
-import { oauthProviderSchema, redirectToOAuthProvider } from "@/server/auth-oauth";
-import { respondJson } from "@/server/respond-json";
+import { createRouteHandler } from "@/server/route-handler";
 
-const responses = {
-  invalidProvider: { body: { error: "Invalid OAuth provider." }, status: 400 },
+const signInStartDefinition = {
+  body: z.object({
+    provider: oauthProviderSchema,
+    returnTo: z.string().default("/"),
+  }),
+  cookies: {
+    authFlow: { cookie: cookies.authFlow, access: "write" },
+  },
 } as const;
 
-export async function POST(request: NextRequest) {
-  const formData = await request.formData();
-  const provider = oauthProviderSchema.safeParse(formData.get("provider"));
-  const returnToValue = formData.get("returnTo");
-
-  if (!provider.success) {
-    return respondJson(responses.invalidProvider);
-  }
-
+export const POST = createRouteHandler(signInStartDefinition, async ({ body, cookies, redirect }) => {
   const nonce = crypto.randomUUID();
-  const response = redirectToOAuthProvider(provider.data, "/api/auth/sign-in/callback", nonce);
-  await cookies.authFlow.set(response.cookies, {
+  cookies.authFlow.set({
     intent: "sign-in",
     nonce,
-    returnTo: typeof returnToValue === "string" ? returnToValue : "/",
+    returnTo: body.returnTo,
   });
-  return response;
-}
+  return redirect(getOAuthProviderUrl(
+    body.provider,
+    "/api/auth/sign-in/callback",
+    nonce,
+  ), 303);
+});

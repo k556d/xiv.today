@@ -3,7 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { selectCharacter, signOut } from "@/app/actions/auth";
+import { selectCharacter } from "@/app/actions/auth/select-character";
+import { signOut } from "@/app/actions/auth/sign-out";
 import type { CurrentUser } from "@/server/current-user";
 import LoginModal from "./LoginModal";
 import styles from "./UserMenu.module.css";
@@ -41,7 +42,7 @@ export default function UserMenuClient({ user }: { user: CurrentUser | null }) {
         aria-label="Selected character"
         value={user.selectedCharacter?.id ?? ""}
         onChange={(event) => {
-          void selectCharacter(event.target.value || null);
+          void selectCharacter({ characterId: event.target.value || null });
         }}
       >
         <option value="">No character selected</option>

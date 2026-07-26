@@ -6,38 +6,59 @@ import { createPasswordHash } from "@/server/auth";
 import { requireUser } from "@/server/current-user";
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
+import { createServerAction } from "@/server/server-action";
 
-const credentialsSchema = z.object({
-  username: z.string().trim().toLowerCase().regex(/^[a-z0-9_-]{2,32}$/).or(z.literal("")),
-  password: z.string().or(z.literal("")),
-});
+const definition = {
+  body: z.object({
+    username: z.string().trim().toLowerCase().regex(/^[a-z0-9_-]{2,32}$/).or(z.literal("")),
+    password: z.string().or(z.literal("")),
+  }),
+  response: (username: string | null) => ({ username }),
+  errors: {
+    credentialsRequired: {
+      error: {
+        code: "credentials-required",
+        message: "Enter a username or password to update.",
+      },
+    },
+    passwordTooShort: {
+      error: {
+        code: "password-too-short",
+        message: "Password must be at least 8 characters.",
+      },
+    },
+    usernameTaken: {
+      error: {
+        code: "username-taken",
+        message: "Username is already taken.",
+      },
+    },
+  },
+} as const;
 
-export async function updateCredentials(usernameValue: string, passwordValue: string) {
+export const updateCredentials = createServerAction(definition, async ({ body, errors, respond }) => {
   const user = await requireUser();
-  const parsed = credentialsSchema.safeParse({ username: usernameValue, password: passwordValue });
-  const username = usernameValue.trim().toLowerCase() || null;
-  const password = passwordValue || null;
+  const username = body.username || null;
+  const password = body.password || null;
 
   if (!username && !password) {
-    return { ok: false as const, error: "Enter a username or password to update." };
+    throw errors.credentialsRequired();
   }
-  if (!parsed.success || (password && password.length < 8)) {
-    return {
-      ok: false as const,
-      error: password && password.length < 8
-        ? "Password must be at least 8 characters."
-        : "Username must be 2-32 characters and use only letters, numbers, underscores, or hyphens.",
-    };
+  if (password && password.length < 8) {
+    throw errors.passwordTooShort();
   }
 
   if (username) {
     const [owner] = await db.select({ userId: users.id }).from(users).where(eq(users.username, username)).limit(1);
     if (owner && owner.userId !== user.userId) {
-      return { ok: false as const, error: "Username is already taken." };
+      throw errors.usernameTaken();
     }
   }
 
   const passwordHash = password ? await createPasswordHash(password) : undefined;
-  await db.update(users).set({ ...(username ? { username } : {}), ...(passwordHash ? { passwordHash } : {}) }).where(eq(users.id, user.userId));
-  return { ok: true as const, username };
-}
+  await db.update(users).set({
+    ...(username ? { username } : {}),
+    ...(passwordHash ? { passwordHash } : {}),
+  }).where(eq(users.id, user.userId));
+  return respond(username);
+});

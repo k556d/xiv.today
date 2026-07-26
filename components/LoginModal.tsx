@@ -3,7 +3,10 @@
 import { useState } from "react";
 import { FaDiscord, FaUser, FaXmark } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
-import { register, sendEmailChallenge, signIn, verifyEmailChallenge } from "@/app/actions/auth";
+import { register } from "@/app/actions/auth/register";
+import { sendEmailChallenge } from "@/app/actions/auth/send-email-challenge";
+import { signIn } from "@/app/actions/auth/sign-in";
+import { verifyEmailChallenge } from "@/app/actions/auth/verify-email-challenge";
 import styles from "./LoginModal.module.css";
 
 const messages = {
@@ -39,8 +42,8 @@ export default function LoginModal({
     try {
       const result = await (mode === "register" ? register : signIn)(new FormData(event.currentTarget));
 
-      if (!result.ok) {
-        setError(result.error);
+      if (result?.error) {
+        setError(result.error.message);
         return;
       }
 
@@ -58,10 +61,10 @@ export default function LoginModal({
     setLoading(true);
 
     try {
-      const result = await sendEmailChallenge(email, emailPurpose);
+      const result = await sendEmailChallenge({ email, purpose: emailPurpose });
 
-      if (!result.ok) {
-        setError(result.error ?? messages.codeSendFailed);
+      if (result?.error) {
+        setError(result.error.message);
         return;
       }
 
@@ -80,10 +83,10 @@ export default function LoginModal({
 
     try {
       const code = new FormData(event.currentTarget).get("code");
-      const result = await verifyEmailChallenge(typeof code === "string" ? code : "");
+      const result = await verifyEmailChallenge({ code: typeof code === "string" ? code : "" });
 
-      if (!result.ok) {
-        setError(result.error);
+      if (result?.error) {
+        setError(result.error.message);
         return;
       }
 

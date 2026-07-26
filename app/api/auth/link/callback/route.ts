@@ -1,34 +1,49 @@
-import { type NextRequest } from "next/server";
+import { z } from "zod";
 import { cookies } from "@/server/cookie-definitions";
 import { findLinkedUser, linkOAuthAccount } from "@/server/linked-auth";
-import { redirectToLinkError, redirectToReturnTo } from "@/server/oauth/callback";
+import { getLinkErrorUrl, getReturnToUrl } from "@/server/oauth/callback";
 import { verifyOAuthResult } from "@/server/oauth/result";
+import { createRouteHandler } from "@/server/route-handler";
 
-export async function GET(request: NextRequest) {
-  const resultToken = request.nextUrl.searchParams.get("result");
-  const flow = await cookies.authFlow.get(request.cookies);
-  const session = await cookies.session.get(request.cookies, { allowMissing: true });
+const linkCallbackDefinition = {
+  query: z.object({
+    result: z.string(),
+  }),
+  cookies: {
+    authFlow: { cookie: cookies.authFlow, access: "read-write" },
+    session: { cookie: cookies.session, access: "read-write", optional: true },
+  },
+} as const;
 
-  if (flow.intent !== "link" || !resultToken || !session || session.userId !== flow.userId) {
-    return redirectToLinkError(flow.returnTo, "oauth-expired");
+export const GET = createRouteHandler(linkCallbackDefinition, async ({ query, cookies, redirect }) => {
+  const flow = cookies.authFlow.value;
+  const session = cookies.session.value;
+  const resultToken = query.result;
+  cookies.authFlow.clear();
+
+  if (flow.intent !== "link" || !session || session.userId !== flow.userId) {
+    return redirect(getLinkErrorUrl(flow.returnTo, "oauth-expired"));
   }
 
   const result = await verifyOAuthResult(resultToken);
   if (result.nonce !== flow.nonce) {
-    return redirectToLinkError(flow.returnTo, "oauth-expired");
+    return redirect(getLinkErrorUrl(flow.returnTo, "oauth-expired"));
   }
 
   if (result.type === "error") {
-    return redirectToLinkError(flow.returnTo, result.error);
+    if (result.error === "oauth-cancelled") {
+      return redirect(getLinkErrorUrl(flow.returnTo, "oauth-cancelled"));
+    }
+
+    return redirect(getLinkErrorUrl(flow.returnTo, "oauth-expired"));
   }
 
   const linkedUserId = await findLinkedUser(result.provider, result.providerAccountId);
   if (linkedUserId && linkedUserId !== session.userId) {
-    return redirectToLinkError(flow.returnTo, "oauth-account-linked");
+    return redirect(getLinkErrorUrl(flow.returnTo, "oauth-account-linked"));
   }
 
   await linkOAuthAccount({ userId: session.userId, ...result });
-  const response = redirectToReturnTo(flow.returnTo);
-  await cookies.session.set(response.cookies, session);
-  return response;
-}
+  cookies.session.set(session);
+  return redirect(getReturnToUrl(flow.returnTo));
+});
