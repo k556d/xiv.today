@@ -1,0 +1,22 @@
+{
+  "name": "@xiv-today/next-request",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "exports": {
+    "./action": "./src/action.ts",
+    "./cookies": "./src/cookies.ts",
+    "./request": "./src/request.ts",
+    "./route": "./src/route.ts"
+  },
+  "dependencies": {
+    "date-fns": "^4.4.0",
+    "zod": "^4.4.3"
+  },
+  "peerDependencies": {
+    "next": "16.2.7"
+  }
+}
