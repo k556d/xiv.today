@@ -1,9 +1,7 @@
 import { unauthorized } from "next/navigation";
-import { eq } from "drizzle-orm";
 import LoginMethodsPanel from "@/components/LoginMethodsPanel";
 import { getCurrentUser } from "@/server/current-user";
-import { db } from "@/server/db";
-import { linkedAccounts, users } from "@/server/db/schema";
+import { findLoginMethodFields } from "@/server/db/users";
 import styles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
@@ -20,15 +18,7 @@ export default async function LoginMethodsPage({
     unauthorized();
   }
 
-  const loginMethodRows = await db
-    .select({
-      username: users.username,
-      email: users.email,
-      provider: linkedAccounts.provider,
-    })
-    .from(users)
-    .leftJoin(linkedAccounts, eq(linkedAccounts.userId, users.id))
-    .where(eq(users.id, session.userId))
+  const loginMethodRows = await findLoginMethodFields(session.userId);
 
   return (
     <main className={styles.page}>

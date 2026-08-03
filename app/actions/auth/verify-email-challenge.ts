@@ -1,11 +1,9 @@
 "use server";
 
-import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { cookies } from "@/server/cookie-definitions";
 import { getCurrentUser } from "@/server/current-user";
-import { db } from "@/server/db";
-import { users } from "@/server/db/schema";
+import { createEmailUser, updateUserEmail } from "@/server/db/users";
 import { createAction } from "@/server/action";
 
 const definition = {
@@ -42,10 +40,10 @@ export const verifyEmailChallenge = createAction(definition, async ({ body, cook
   }
 
   const userId = challenge.purpose === "sign-up"
-    ? (await db.insert(users).values({ email: challenge.email }).returning({ id: users.id }))[0]?.id ?? null
+    ? (await createEmailUser(challenge.email))?.id ?? null
     : challenge.purpose === "email-change"
       ? challenge.userId && currentUser?.userId === challenge.userId
-        ? await db.update(users).set({ email: challenge.email }).where(eq(users.id, challenge.userId)).then(() => challenge.userId)
+        ? await updateUserEmail(challenge.userId, challenge.email).then(() => challenge.userId)
         : null
       : challenge.userId;
 

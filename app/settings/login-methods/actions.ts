@@ -1,11 +1,9 @@
 "use server";
 
-import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { createPasswordHash } from "@/server/auth";
 import { requireUser } from "@/server/current-user";
-import { db } from "@/server/db";
-import { users } from "@/server/db/schema";
+import { findUserIdByUsername, updateUserCredentials } from "@/server/db/users";
 import { createAction } from "@/server/action";
 
 const definition = {
@@ -49,16 +47,16 @@ export const updateCredentials = createAction(definition, async ({ body, errors,
   }
 
   if (username) {
-    const [owner] = await db.select({ userId: users.id }).from(users).where(eq(users.username, username)).limit(1);
-    if (owner && owner.userId !== user.userId) {
+    const ownerId = await findUserIdByUsername(username);
+    if (ownerId && ownerId !== user.userId) {
       throw errors.usernameTaken();
     }
   }
 
   const passwordHash = password ? await createPasswordHash(password) : undefined;
-  await db.update(users).set({
+  await updateUserCredentials(user.userId, {
     ...(username ? { username } : {}),
     ...(passwordHash ? { passwordHash } : {}),
-  }).where(eq(users.id, user.userId));
+  });
   return respond(username);
 });

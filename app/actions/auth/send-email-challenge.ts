@@ -1,12 +1,10 @@
 "use server";
 
-import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { createEmailVerificationCode } from "@/server/auth";
 import { cookies } from "@/server/cookie-definitions";
 import { requireUser } from "@/server/current-user";
-import { db } from "@/server/db";
-import { users } from "@/server/db/schema";
+import { findUserIdByEmail } from "@/server/db/users";
 import { sendOneTimeCode } from "@/server/email";
 import { createAction } from "@/server/action";
 
@@ -33,12 +31,12 @@ const definition = {
 
 export const sendEmailChallenge = createAction(definition, async ({ body, cookies, errors }) => {
   const { email, purpose } = body;
-  const [emailOwner] = await db.select({ id: users.id }).from(users).where(eq(users.email, email)).limit(1);
+  const emailOwnerId = await findUserIdByEmail(email);
   const userResult: { userId: string | null; unavailable?: never } | { userId?: never; unavailable: true } = purpose === "sign-in"
-    ? { userId: emailOwner?.id ?? null }
+    ? { userId: emailOwnerId }
     : purpose === "sign-up"
-      ? emailOwner ? { unavailable: true } : { userId: null }
-      : await requireUser().then((user) => emailOwner && emailOwner.id !== user.userId
+      ? emailOwnerId ? { unavailable: true } : { userId: null }
+      : await requireUser().then((user) => emailOwnerId && emailOwnerId !== user.userId
         ? { unavailable: true as const }
         : { userId: user.userId });
 

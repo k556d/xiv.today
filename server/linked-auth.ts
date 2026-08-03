@@ -1,28 +1,16 @@
-import { and, eq } from "drizzle-orm";
-import { db } from "@/server/db";
-import { linkedAccounts, users } from "@/server/db/schema";
+import {
+  createLinkedUser,
+  findLinkedUserId,
+  replaceLinkedAccount,
+  type LinkedAccountInput,
+} from "@/server/db/linked-accounts";
 
 export async function findLinkedUser(provider: string, providerAccountId: string) {
-  const [linkedUser] = await db
-    .select({ userId: linkedAccounts.userId })
-    .from(linkedAccounts)
-    .where(and(eq(linkedAccounts.provider, provider), eq(linkedAccounts.providerAccountId, providerAccountId)))
-    .limit(1);
-
-  return linkedUser?.userId;
+  return findLinkedUserId(provider, providerAccountId);
 }
 
-export async function requireOAuthUser({
-  provider,
-  providerAccountId,
-  displayName,
-  avatarUrl,
-}: {
-  provider: string;
-  providerAccountId: string;
-  displayName: string;
-  avatarUrl: string;
-}): Promise<string> {
+export async function requireOAuthUser(account: LinkedAccountInput): Promise<string> {
+  const { provider, providerAccountId } = account;
   const linkedUserId = await findLinkedUser(provider, providerAccountId);
 
   if (linkedUserId) {
@@ -31,42 +19,16 @@ export async function requireOAuthUser({
 
   const userId = crypto.randomUUID();
 
-  await db.batch([
-    db.insert(users).values({ id: userId }),
-    db.insert(linkedAccounts).values({
-      userId,
-      provider,
-      providerAccountId,
-      displayName,
-      avatarUrl,
-    }),
-  ]);
+  await createLinkedUser(userId, account);
 
   return userId;
 }
 
 export async function linkOAuthAccount({
   userId,
-  provider,
-  providerAccountId,
-  displayName,
-  avatarUrl,
-}: {
+  ...account
+}: LinkedAccountInput & {
   userId: string;
-  provider: string;
-  providerAccountId: string;
-  displayName: string;
-  avatarUrl: string;
 }): Promise<void> {
-  await db.batch([
-    db.delete(linkedAccounts)
-      .where(and(eq(linkedAccounts.userId, userId), eq(linkedAccounts.provider, provider))),
-    db.insert(linkedAccounts).values({
-      userId,
-      provider,
-      providerAccountId,
-      displayName,
-      avatarUrl,
-    }),
-  ]);
+  await replaceLinkedAccount(userId, account);
 }

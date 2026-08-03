@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { db } from "@/server/db";
 import CharacterSelectLink from "@/components/CharacterSelectLink";
+import { findEventsWithOrganizer } from "@/server/db/events";
 import styles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
@@ -8,11 +8,7 @@ export const dynamic = "force-dynamic";
 const forkedTowerHref = "/events/forked-tower";
 
 export default async function Home() {
-  const upcomingEvents = await db.query.events.findMany({
-    with: {
-      organizer: true,
-    },
-  });
+  const upcomingEvents = await findEventsWithOrganizer();
 
   return (
     <main className={styles.page}>

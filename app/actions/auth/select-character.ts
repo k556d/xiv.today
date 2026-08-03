@@ -1,11 +1,9 @@
 "use server";
 
-import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 import { cookies } from "@/server/cookie-definitions";
 import { requireUser } from "@/server/current-user";
-import { db } from "@/server/db";
-import { characters } from "@/server/db/schema";
+import { userOwnsCharacter } from "@/server/db/characters";
 import { createAction } from "@/server/action";
 
 const definition = {
@@ -33,11 +31,7 @@ export const selectCharacter = createAction(definition, async ({ body, cookies, 
   const { characterId } = body;
 
   if (characterId) {
-    const [character] = await db.select({ id: characters.id }).from(characters).where(and(
-      eq(characters.id, characterId),
-      eq(characters.userId, user.userId),
-    )).limit(1);
-    if (!character) {
+    if (!await userOwnsCharacter(user.userId, characterId)) {
       throw errors.characterNotFound();
     }
   }

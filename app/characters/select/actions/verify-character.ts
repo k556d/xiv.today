@@ -1,11 +1,14 @@
 "use server";
 
-import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { cookies } from "@/server/cookie-definitions";
 import { requireUser } from "@/server/current-user";
-import { db } from "@/server/db";
-import { characters, worlds } from "@/server/db/schema";
+import {
+  createCharacter,
+  findCharacterOwnerId,
+  updateCharacter,
+} from "@/server/db/characters";
+import { worldExists } from "@/server/db/worlds";
 import { verifyLodestoneCharacterCode } from "@/server/lodestone";
 import { createAction } from "@/server/action";
 
@@ -75,8 +78,7 @@ export const verifyCharacter = createAction(definition, async ({ body, cookies, 
   if (challenge.characterId !== character.characterId) {
     throw errors.verificationCharacterMismatch();
   }
-  const [world] = await db.select({ name: worlds.name }).from(worlds).where(eq(worlds.name, character.worldName)).limit(1);
-  if (!world) {
+  if (!await worldExists(character.worldName)) {
     throw errors.unknownWorld();
   }
 
@@ -87,19 +89,19 @@ export const verifyCharacter = createAction(definition, async ({ body, cookies, 
     throw errors.lodestoneCodeNotFound();
   }
 
-  const [existing] = await db.select({ userId: characters.userId }).from(characters).where(eq(characters.id, character.characterId)).limit(1);
-  if (existing && existing.userId !== user.userId) {
+  const ownerId = await findCharacterOwnerId(character.characterId);
+  if (ownerId && ownerId !== user.userId) {
     throw errors.characterAlreadyLinked();
   }
 
-  if (existing) {
-    await db.update(characters).set({
+  if (ownerId) {
+    await updateCharacter(character.characterId, {
       name: character.characterName,
       worldName: character.worldName,
       avatarUrl: character.avatarUrl,
-    }).where(eq(characters.id, character.characterId));
+    });
   } else {
-    await db.insert(characters).values({
+    await createCharacter({
       id: character.characterId,
       userId: user.userId,
       name: character.characterName,

@@ -1,11 +1,9 @@
 "use server";
 
-import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { createPasswordHash } from "@/server/auth";
 import { cookies } from "@/server/cookie-definitions";
-import { db } from "@/server/db";
-import { users } from "@/server/db/schema";
+import { createPasswordUser, findUserIdByUsername } from "@/server/db/users";
 import { createAction } from "@/server/action";
 
 const definition = {
@@ -30,14 +28,10 @@ const definition = {
 } as const;
 
 export const register = createAction(definition, async ({ body, cookies, errors }) => {
-  const [existing] = await db.select({ id: users.id }).from(users).where(eq(users.username, body.username)).limit(1);
-  if (existing) {
+  if (await findUserIdByUsername(body.username)) {
     throw errors.usernameTaken();
   }
 
-  const [user] = await db.insert(users).values({
-    username: body.username,
-    passwordHash: await createPasswordHash(body.password),
-  }).returning({ id: users.id });
+  const user = await createPasswordUser(body.username, await createPasswordHash(body.password));
   cookies.session.set({ userId: user.id, selectedCharacterId: null });
 });

@@ -1,10 +1,8 @@
 import { unauthorized } from "next/navigation";
 import CharacterLookupSearch from "@/components/CharacterLookupSearch";
-import { db } from "@/server/db";
-import { worlds } from "@/server/db/schema";
 import { getCurrentUser } from "@/server/current-user";
+import { listWorlds } from "@/server/db/worlds";
 import { searchLodestoneCharacters, type LodestoneCharacterSearchResult } from "@/server/lodestone";
-import { asc } from "drizzle-orm";
 import styles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
@@ -23,7 +21,7 @@ export default async function CharacterSelectPage({
   const params = await searchParams;
   const name = typeof params.name === "string" ? params.name.trim() : "";
   const world = typeof params.world === "string" ? params.world.trim() : "";
-  const worldRows = await db.select({ name: worlds.name }).from(worlds).orderBy(asc(worlds.name));
+  const worldRows = await listWorlds();
   const lookup = name && world
     ? await searchLodestoneCharacters(name, world)
       .then((results) => ({ results, error: null }))

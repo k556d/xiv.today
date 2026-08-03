@@ -1,8 +1,9 @@
 "use server";
 
 import { z } from "zod";
-import { findUserByIdentifier, validatePassword } from "@/server/auth";
+import { validatePassword } from "@/server/auth";
 import { cookies } from "@/server/cookie-definitions";
+import { findUserByIdentifier } from "@/server/db/users";
 import { createAction } from "@/server/action";
 
 const definition = {
@@ -32,5 +33,5 @@ export const signIn = createAction(definition, async ({ body, cookies, errors })
     throw errors.invalidCredentials();
   }
 
-  cookies.session.set({ userId: user.userId, selectedCharacterId: null });
+  cookies.session.set({ userId: user.id, selectedCharacterId: null });
 });

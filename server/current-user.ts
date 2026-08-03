@@ -1,11 +1,10 @@
 import { cache } from "react";
 import { cookies as getRequestCookies } from "next/headers";
 import { unauthorized } from "next/navigation";
-import { eq } from "drizzle-orm";
 import { deserializeCookie } from "@/server/cookie-factories";
 import { cookies } from "@/server/cookie-definitions";
-import { db } from "@/server/db";
-import { characters, users } from "@/server/db/schema";
+import { findCharactersByUserId } from "@/server/db/characters";
+import { findUserById } from "@/server/db/users";
 
 export type CurrentUser = {
   userId: string;
@@ -16,32 +15,26 @@ export type CurrentUser = {
 };
 
 export async function getCurrentUserForSession(userId: string, selectedCharacterId: string | null): Promise<CurrentUser | null> {
-  const [user] = await db
-    .select({ username: users.username, email: users.email })
-    .from(users)
-    .where(eq(users.id, userId))
-    .limit(1);
+  const user = await findUserById(userId);
 
   if (!user) {
     return null;
   }
 
-  const characterRows = await db
-    .select({
-      id: characters.id,
-      name: characters.name,
-      worldName: characters.worldName,
-      avatarUrl: characters.avatarUrl,
-    })
-    .from(characters)
-    .where(eq(characters.userId, userId));
+  const characterRows = await findCharactersByUserId(userId);
+  const userCharacters = characterRows.map(({ id, name, worldName, avatarUrl }) => ({
+    id,
+    name,
+    worldName,
+    avatarUrl,
+  }));
 
   return {
     userId,
     username: user.username,
     email: user.email,
-    characters: characterRows,
-    selectedCharacter: characterRows.find((character) => character.id === selectedCharacterId) ?? null,
+    characters: userCharacters,
+    selectedCharacter: userCharacters.find((character) => character.id === selectedCharacterId) ?? null,
   };
 }
 
