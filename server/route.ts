@@ -26,14 +26,22 @@ type RouteDefinition = Omit<RequestDefinition, "response" | "errors"> & {
   errors?: Record<string, RouteError | RouteErrorCallback>;
 };
 
-export function createRoute<Definition extends RouteDefinition>(
-  definition: Definition,
-  handler: Handler<Definition, RouteRedirect>,
-) {
+export function defineRoute<const Definition extends RouteDefinition>(definition: Definition) {
   validateRequestSchema(definition.body);
   validateRequestSchema(definition.query);
 
-  return async function routeHandler(request: Request): Promise<Response> {
+  return {
+    handle(handler: Handler<Definition, RouteRedirect>) {
+      return createRoute(definition, handler);
+    },
+  };
+}
+
+function createRoute<Definition extends RouteDefinition>(
+  definition: Definition,
+  handler: Handler<Definition, RouteRedirect>,
+) {
+  return async function routeHandler(request: Request) {
     try {
       const cookieStore = await getRequestCookies();
       const body = definition.body ? await readBody(request, definition.body) : undefined;

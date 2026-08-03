@@ -6,9 +6,9 @@ import { cookies } from "@/server/cookie-definitions";
 import { requireUser } from "@/server/current-user";
 import { findUserIdByEmail } from "@/server/db/users";
 import { sendOneTimeCode } from "@/server/email";
-import { createAction } from "@/server/action";
+import { defineAction } from "@/server/action";
 
-const definition = {
+const definition = defineAction({
   body: z.object({
     email: z.string().trim().toLowerCase().email(),
     purpose: z.enum(["sign-in", "sign-up", "email-change"]),
@@ -27,9 +27,9 @@ const definition = {
       },
     },
   },
-} as const;
+});
 
-export const sendEmailChallenge = createAction(definition, async ({ body, cookies, errors }) => {
+export const sendEmailChallenge = definition.handle(async ({ body, cookies, errors }) => {
   const { email, purpose } = body;
   const emailOwnerId = await findUserIdByEmail(email);
   const userResult: { userId: string | null; unavailable?: never } | { userId?: never; unavailable: true } = purpose === "sign-in"

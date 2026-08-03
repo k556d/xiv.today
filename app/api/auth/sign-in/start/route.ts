@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { getOAuthProviderUrl, oauthProviderSchema } from "@/server/auth-oauth";
 import { cookies } from "@/server/cookie-definitions";
-import { createRoute } from "@/server/route";
+import { defineRoute } from "@/server/route";
 
-const signInStartDefinition = {
+const signInStartDefinition = defineRoute({
   body: z.object({
     provider: oauthProviderSchema,
     returnTo: z.string().default("/"),
@@ -11,9 +11,9 @@ const signInStartDefinition = {
   cookies: {
     authFlow: { cookie: cookies.authFlow, access: "write" },
   },
-} as const;
+});
 
-export const POST = createRoute(signInStartDefinition, async ({ body, cookies, redirect }) => {
+export const POST = signInStartDefinition.handle(({ body, cookies, redirect }) => {
   const nonce = crypto.randomUUID();
   cookies.authFlow.set({
     intent: "sign-in",

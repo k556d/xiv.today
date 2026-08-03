@@ -3,9 +3,9 @@ import { cookies } from "@/server/cookie-definitions";
 import { requireOAuthUser } from "@/server/linked-auth";
 import { getAuthErrorUrl, getReturnToUrl } from "@/server/oauth/callback";
 import { verifyOAuthResult } from "@/server/oauth/result";
-import { createRoute } from "@/server/route";
+import { defineRoute } from "@/server/route";
 
-const signInCallbackDefinition = {
+const signInCallbackDefinition = defineRoute({
   query: z.object({
     result: z.string(),
   }),
@@ -13,9 +13,9 @@ const signInCallbackDefinition = {
     authFlow: { cookie: cookies.authFlow, access: "read-write" },
     session: { cookie: cookies.session, access: "write" },
   },
-} as const;
+});
 
-export const GET = createRoute(signInCallbackDefinition, async ({ query, cookies, redirect }) => {
+export const GET = signInCallbackDefinition.handle(async ({ query, cookies, redirect }) => {
   const flow = cookies.authFlow.value;
   const resultToken = query.result;
   cookies.authFlow.clear();

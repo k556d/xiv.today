@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { getOAuthProviderUrl, oauthProviderSchema } from "@/server/auth-oauth";
 import { cookies } from "@/server/cookie-definitions";
-import { createRoute } from "@/server/route";
+import { defineRoute } from "@/server/route";
 
-const linkStartDefinition = {
+const linkStartDefinition = defineRoute({
   body: z.object({
     provider: oauthProviderSchema,
     returnTo: z.string().default("/settings/login-methods"),
@@ -23,9 +23,9 @@ const linkStartDefinition = {
       },
     },
   },
-} as const;
+});
 
-export const POST = createRoute(linkStartDefinition, async ({ body, cookies, errors, redirect }) => {
+export const POST = linkStartDefinition.handle(({ body, cookies, errors, redirect }) => {
   const session = cookies.session.value;
 
   if (!session) {

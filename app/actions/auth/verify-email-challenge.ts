@@ -4,9 +4,9 @@ import { z } from "zod";
 import { cookies } from "@/server/cookie-definitions";
 import { getCurrentUser } from "@/server/current-user";
 import { createEmailUser, updateUserEmail } from "@/server/db/users";
-import { createAction } from "@/server/action";
+import { defineAction } from "@/server/action";
 
-const definition = {
+const definition = defineAction({
   body: z.object({
     code: z.string().trim().min(1),
   }),
@@ -29,9 +29,9 @@ const definition = {
       },
     },
   },
-} as const;
+});
 
-export const verifyEmailChallenge = createAction(definition, async ({ body, cookies, errors }) => {
+export const verifyEmailChallenge = definition.handle(async ({ body, cookies, errors }) => {
   const challenge = cookies.emailVerification.value;
   const currentUser = await getCurrentUser();
 

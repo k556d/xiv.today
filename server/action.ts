@@ -32,12 +32,20 @@ type Action<Definition extends ActionDefinition> = Definition["body"] extends z.
   ? (body: ActionBody<Definition>) => Promise<ResponseValue<Definition> | ErrorValues<Definition> | typeof invalidRequest | typeof internalError>
   : () => Promise<ResponseValue<Definition> | ErrorValues<Definition> | typeof invalidRequest | typeof internalError>;
 
-export function createAction<Definition extends ActionDefinition>(
-  definition: Definition,
-  handler: Handler<Definition, ActionRedirect, true>,
-): Action<Definition> {
+export function defineAction<const Definition extends ActionDefinition>(definition: Definition) {
   validateRequestSchema(definition.body);
 
+  return {
+    handle(handler: Handler<Definition, ActionRedirect, true>) {
+      return createAction(definition, handler);
+    },
+  };
+}
+
+function createAction<Definition extends ActionDefinition>(
+  definition: Definition,
+  handler: Handler<Definition, ActionRedirect, true>,
+) {
   const action = async (body?: ActionBody<Definition>) => {
     try {
       let normalizedBody: unknown = body;

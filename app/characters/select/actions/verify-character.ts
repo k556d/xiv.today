@@ -10,9 +10,9 @@ import {
 } from "@/server/db/characters";
 import { worldExists } from "@/server/db/worlds";
 import { verifyLodestoneCharacterCode } from "@/server/lodestone";
-import { createAction } from "@/server/action";
+import { defineAction } from "@/server/action";
 
-const definition = {
+const definition = defineAction({
   body: z.object({
     profileUrl: z.string().trim().url(),
     characterId: z.string().trim().min(1),
@@ -65,9 +65,9 @@ const definition = {
       },
     },
   },
-} as const;
+});
 
-export const verifyCharacter = createAction(definition, async ({ body, cookies, errors, respond }) => {
+export const verifyCharacter = definition.handle(async ({ body, cookies, errors, respond }) => {
   const user = await requireUser();
   const challenge = cookies.characterVerification.value;
   const character = body;

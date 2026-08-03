@@ -3,9 +3,9 @@ import { cookies } from "@/server/cookie-definitions";
 import { findLinkedUser, linkOAuthAccount } from "@/server/linked-auth";
 import { getLinkErrorUrl, getReturnToUrl } from "@/server/oauth/callback";
 import { verifyOAuthResult } from "@/server/oauth/result";
-import { createRoute } from "@/server/route";
+import { defineRoute } from "@/server/route";
 
-const linkCallbackDefinition = {
+const linkCallbackDefinition = defineRoute({
   query: z.object({
     result: z.string(),
   }),
@@ -13,9 +13,9 @@ const linkCallbackDefinition = {
     authFlow: { cookie: cookies.authFlow, access: "read-write" },
     session: { cookie: cookies.session, access: "read-write", optional: true },
   },
-} as const;
+});
 
-export const GET = createRoute(linkCallbackDefinition, async ({ query, cookies, redirect }) => {
+export const GET = linkCallbackDefinition.handle(async ({ query, cookies, redirect }) => {
   const flow = cookies.authFlow.value;
   const session = cookies.session.value;
   const resultToken = query.result;

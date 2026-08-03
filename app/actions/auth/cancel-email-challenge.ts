@@ -1,17 +1,17 @@
 "use server";
 
 import { cookies } from "@/server/cookie-definitions";
-import { createAction } from "@/server/action";
+import { defineAction } from "@/server/action";
 
-const definition = {
+const definition = defineAction({
   cookies: {
     emailVerification: {
       cookie: cookies.emailVerification,
       access: "write",
     },
   },
-} as const;
+});
 
-export const cancelEmailChallenge = createAction(definition, async ({ cookies }) => {
+export const cancelEmailChallenge = definition.handle(({ cookies }) => {
   cookies.emailVerification.clear();
 });

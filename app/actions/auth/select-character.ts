@@ -4,9 +4,9 @@ import { z } from "zod";
 import { cookies } from "@/server/cookie-definitions";
 import { requireUser } from "@/server/current-user";
 import { userOwnsCharacter } from "@/server/db/characters";
-import { createAction } from "@/server/action";
+import { defineAction } from "@/server/action";
 
-const definition = {
+const definition = defineAction({
   body: z.object({
     characterId: z.string().trim().min(1).nullable(),
   }),
@@ -24,9 +24,9 @@ const definition = {
       },
     },
   },
-} as const;
+});
 
-export const selectCharacter = createAction(definition, async ({ body, cookies, errors }) => {
+export const selectCharacter = definition.handle(async ({ body, cookies, errors }) => {
   const user = await requireUser();
   const { characterId } = body;
 

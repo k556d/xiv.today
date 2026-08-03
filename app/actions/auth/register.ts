@@ -4,9 +4,9 @@ import { z } from "zod";
 import { createPasswordHash } from "@/server/auth";
 import { cookies } from "@/server/cookie-definitions";
 import { createPasswordUser, findUserIdByUsername } from "@/server/db/users";
-import { createAction } from "@/server/action";
+import { defineAction } from "@/server/action";
 
-const definition = {
+const definition = defineAction({
   body: z.object({
     username: z.string().trim().toLowerCase().regex(/^[a-z0-9_-]{2,32}$/),
     password: z.string().min(8),
@@ -25,9 +25,9 @@ const definition = {
       },
     },
   },
-} as const;
+});
 
-export const register = createAction(definition, async ({ body, cookies, errors }) => {
+export const register = definition.handle(async ({ body, cookies, errors }) => {
   if (await findUserIdByUsername(body.username)) {
     throw errors.usernameTaken();
   }

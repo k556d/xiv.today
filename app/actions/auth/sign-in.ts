@@ -4,9 +4,9 @@ import { z } from "zod";
 import { validatePassword } from "@/server/auth";
 import { cookies } from "@/server/cookie-definitions";
 import { findUserByIdentifier } from "@/server/db/users";
-import { createAction } from "@/server/action";
+import { defineAction } from "@/server/action";
 
-const definition = {
+const definition = defineAction({
   body: z.object({
     identifier: z.string().trim().toLowerCase().min(1).max(320),
     password: z.string().min(1),
@@ -25,9 +25,9 @@ const definition = {
       },
     },
   },
-} as const;
+});
 
-export const signIn = createAction(definition, async ({ body, cookies, errors }) => {
+export const signIn = definition.handle(async ({ body, cookies, errors }) => {
   const user = await findUserByIdentifier(body.identifier);
   if (!user?.passwordHash || !await validatePassword(body.password, user.passwordHash)) {
     throw errors.invalidCredentials();

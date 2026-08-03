@@ -1,17 +1,17 @@
 "use server";
 
 import { cookies } from "@/server/cookie-definitions";
-import { createAction } from "@/server/action";
+import { defineAction } from "@/server/action";
 
-const definition = {
+const definition = defineAction({
   cookies: {
     session: {
       cookie: cookies.session,
       access: "write",
     },
   },
-} as const;
+});
 
-export const signOut = createAction(definition, async ({ cookies }) => {
+export const signOut = definition.handle(({ cookies }) => {
   cookies.session.clear();
 });

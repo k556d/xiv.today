@@ -4,9 +4,9 @@ import { z } from "zod";
 import { createPasswordHash } from "@/server/auth";
 import { requireUser } from "@/server/current-user";
 import { findUserIdByUsername, updateUserCredentials } from "@/server/db/users";
-import { createAction } from "@/server/action";
+import { defineAction } from "@/server/action";
 
-const definition = {
+const definition = defineAction({
   body: z.object({
     username: z.string().trim().toLowerCase().regex(/^[a-z0-9_-]{2,32}$/).or(z.literal("")),
     password: z.string().or(z.literal("")),
@@ -32,9 +32,9 @@ const definition = {
       },
     },
   },
-} as const;
+});
 
-export const updateCredentials = createAction(definition, async ({ body, errors, respond }) => {
+export const updateCredentials = definition.handle(async ({ body, errors, respond }) => {
   const user = await requireUser();
   const username = body.username || null;
   const password = body.password || null;
