@@ -26,7 +26,7 @@ type RouteDefinition = Omit<RequestDefinition, "response" | "errors"> & {
   errors?: Record<string, RouteError | RouteErrorCallback>;
 };
 
-export function createRouteHandler<Definition extends RouteDefinition>(
+export function createRoute<Definition extends RouteDefinition>(
   definition: Definition,
   handler: Handler<Definition, RouteRedirect>,
 ) {

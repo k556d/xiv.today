@@ -102,6 +102,15 @@ describe("executeRequest", () => {
     expect(result).toMatchObject({ type: "response", response: undefined });
   });
 
+  it("allows implicit completion when enabled without a response definition", async () => {
+    const result = await executeRequest({}, async ({ body, query }) => {
+      expect(body).toEqual({});
+      expect(query).toEqual({});
+    }, { cookies: {} }, 303, true);
+
+    expect(result).toMatchObject({ type: "response", response: undefined });
+  });
+
   it("distinguishes required and optional readable cookies", async () => {
     const requiredDefinition = {
       cookies: {

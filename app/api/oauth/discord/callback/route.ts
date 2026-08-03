@@ -2,7 +2,7 @@ import { z } from "zod";
 import { cookies } from "@/server/cookie-definitions";
 import { createOAuth, fetchProfile } from "@/server/oauth/discord";
 import { getOAuthResultUrl } from "@/server/oauth/redirect";
-import { createRouteHandler } from "@/server/route-handler";
+import { createRoute } from "@/server/route";
 
 const discordOAuthCallbackDefinition = {
   query: z.object({
@@ -15,7 +15,7 @@ const discordOAuthCallbackDefinition = {
   },
 } as const;
 
-export const GET = createRouteHandler(discordOAuthCallbackDefinition, async ({ query, cookies, redirect }) => {
+export const GET = createRoute(discordOAuthCallbackDefinition, async ({ query, cookies, redirect }) => {
   const { callbackUrl, nonce, state: storedState } = cookies.oauth.value;
   const { code, error, state } = query;
   cookies.oauth.clear();

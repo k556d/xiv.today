@@ -2,7 +2,7 @@ import { generateCodeVerifier, generateState } from "arctic";
 import { cookies } from "@/server/cookie-definitions";
 import { createOAuth, scopes } from "@/server/oauth/google";
 import { oauthRequestSchema } from "@/server/oauth/request";
-import { createRouteHandler } from "@/server/route-handler";
+import { createRoute } from "@/server/route";
 
 const googleOAuthStartDefinition = {
   query: oauthRequestSchema,
@@ -11,7 +11,7 @@ const googleOAuthStartDefinition = {
   },
 } as const;
 
-export const GET = createRouteHandler(googleOAuthStartDefinition, async ({ query, cookies, redirect }) => {
+export const GET = createRoute(googleOAuthStartDefinition, async ({ query, cookies, redirect }) => {
   const state = generateState();
   const codeVerifier = generateCodeVerifier();
   const google = createOAuth();

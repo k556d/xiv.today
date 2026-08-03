@@ -7,7 +7,7 @@ import { requireUser } from "@/server/current-user";
 import { db } from "@/server/db";
 import { characters, worlds } from "@/server/db/schema";
 import { verifyLodestoneCharacterCode } from "@/server/lodestone";
-import { createServerAction } from "@/server/server-action";
+import { createAction } from "@/server/action";
 
 const definition = {
   body: z.object({
@@ -64,7 +64,7 @@ const definition = {
   },
 } as const;
 
-export const verifyCharacter = createServerAction(definition, async ({ body, cookies, errors, respond }) => {
+export const verifyCharacter = createAction(definition, async ({ body, cookies, errors, respond }) => {
   const user = await requireUser();
   const challenge = cookies.characterVerification.value;
   const character = body;

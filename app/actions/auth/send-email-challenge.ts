@@ -8,7 +8,7 @@ import { requireUser } from "@/server/current-user";
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
 import { sendOneTimeCode } from "@/server/email";
-import { createServerAction } from "@/server/server-action";
+import { createAction } from "@/server/action";
 
 const definition = {
   body: z.object({
@@ -31,7 +31,7 @@ const definition = {
   },
 } as const;
 
-export const sendEmailChallenge = createServerAction(definition, async ({ body, cookies, errors, respond }) => {
+export const sendEmailChallenge = createAction(definition, async ({ body, cookies, errors }) => {
   const { email, purpose } = body;
   const [emailOwner] = await db.select({ id: users.id }).from(users).where(eq(users.email, email)).limit(1);
   const userResult: { userId: string | null; unavailable?: never } | { userId?: never; unavailable: true } = purpose === "sign-in"
@@ -46,7 +46,7 @@ export const sendEmailChallenge = createServerAction(definition, async ({ body, 
     throw errors.emailVerificationUnavailable();
   }
   if (purpose === "sign-in" && !userResult.userId) {
-    return respond();
+    return;
   }
 
   const code = createEmailVerificationCode();
@@ -57,5 +57,4 @@ export const sendEmailChallenge = createServerAction(definition, async ({ body, 
     purpose,
     code,
   });
-  return respond();
 });

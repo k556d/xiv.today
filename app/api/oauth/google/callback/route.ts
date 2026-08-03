@@ -2,7 +2,7 @@ import { z } from "zod";
 import { cookies } from "@/server/cookie-definitions";
 import { createOAuth, fetchProfile } from "@/server/oauth/google";
 import { getOAuthResultUrl } from "@/server/oauth/redirect";
-import { createRouteHandler } from "@/server/route-handler";
+import { createRoute } from "@/server/route";
 
 const googleOAuthCallbackDefinition = {
   query: z.object({
@@ -15,7 +15,7 @@ const googleOAuthCallbackDefinition = {
   },
 } as const;
 
-export const GET = createRouteHandler(googleOAuthCallbackDefinition, async ({ query, cookies, redirect }) => {
+export const GET = createRoute(googleOAuthCallbackDefinition, async ({ query, cookies, redirect }) => {
   const { callbackUrl, codeVerifier, nonce, state: storedState } = cookies.oauth.value;
   const { code, error, state } = query;
   cookies.oauth.clear();

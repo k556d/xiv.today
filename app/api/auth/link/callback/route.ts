@@ -3,7 +3,7 @@ import { cookies } from "@/server/cookie-definitions";
 import { findLinkedUser, linkOAuthAccount } from "@/server/linked-auth";
 import { getLinkErrorUrl, getReturnToUrl } from "@/server/oauth/callback";
 import { verifyOAuthResult } from "@/server/oauth/result";
-import { createRouteHandler } from "@/server/route-handler";
+import { createRoute } from "@/server/route";
 
 const linkCallbackDefinition = {
   query: z.object({
@@ -15,7 +15,7 @@ const linkCallbackDefinition = {
   },
 } as const;
 
-export const GET = createRouteHandler(linkCallbackDefinition, async ({ query, cookies, redirect }) => {
+export const GET = createRoute(linkCallbackDefinition, async ({ query, cookies, redirect }) => {
   const flow = cookies.authFlow.value;
   const session = cookies.session.value;
   const resultToken = query.result;

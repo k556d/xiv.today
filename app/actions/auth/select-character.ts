@@ -6,7 +6,7 @@ import { cookies } from "@/server/cookie-definitions";
 import { requireUser } from "@/server/current-user";
 import { db } from "@/server/db";
 import { characters } from "@/server/db/schema";
-import { createServerAction } from "@/server/server-action";
+import { createAction } from "@/server/action";
 
 const definition = {
   body: z.object({
@@ -28,7 +28,7 @@ const definition = {
   },
 } as const;
 
-export const selectCharacter = createServerAction(definition, async ({ body, cookies, errors, respond }) => {
+export const selectCharacter = createAction(definition, async ({ body, cookies, errors }) => {
   const user = await requireUser();
   const { characterId } = body;
 
@@ -43,5 +43,4 @@ export const selectCharacter = createServerAction(definition, async ({ body, coo
   }
 
   cookies.session.set({ userId: user.userId, selectedCharacterId: characterId });
-  return respond();
 });

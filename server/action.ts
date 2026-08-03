@@ -32,9 +32,9 @@ type Action<Definition extends ActionDefinition> = Definition["body"] extends z.
   ? (body: ActionBody<Definition>) => Promise<ResponseValue<Definition> | ErrorValues<Definition> | typeof invalidRequest | typeof internalError>
   : () => Promise<ResponseValue<Definition> | ErrorValues<Definition> | typeof invalidRequest | typeof internalError>;
 
-export function createServerAction<Definition extends ActionDefinition>(
+export function createAction<Definition extends ActionDefinition>(
   definition: Definition,
-  handler: Handler<Definition, ActionRedirect>,
+  handler: Handler<Definition, ActionRedirect, true>,
 ): Action<Definition> {
   validateRequestSchema(definition.body);
 
@@ -59,7 +59,7 @@ export function createServerAction<Definition extends ActionDefinition>(
       const executed = await executeRequest(definition, handler, {
         body: normalizedBody,
         cookies: cookieValues,
-      }, 303);
+      }, 303, true);
 
       if (!executed) {
         return invalidRequest;

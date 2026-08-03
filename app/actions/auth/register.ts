@@ -6,7 +6,7 @@ import { createPasswordHash } from "@/server/auth";
 import { cookies } from "@/server/cookie-definitions";
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
-import { createServerAction } from "@/server/server-action";
+import { createAction } from "@/server/action";
 
 const definition = {
   body: z.object({
@@ -29,7 +29,7 @@ const definition = {
   },
 } as const;
 
-export const register = createServerAction(definition, async ({ body, cookies, errors, respond }) => {
+export const register = createAction(definition, async ({ body, cookies, errors }) => {
   const [existing] = await db.select({ id: users.id }).from(users).where(eq(users.username, body.username)).limit(1);
   if (existing) {
     throw errors.usernameTaken();
@@ -40,5 +40,4 @@ export const register = createServerAction(definition, async ({ body, cookies, e
     passwordHash: await createPasswordHash(body.password),
   }).returning({ id: users.id });
   cookies.session.set({ userId: user.id, selectedCharacterId: null });
-  return respond();
 });

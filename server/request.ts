@@ -161,9 +161,18 @@ export type HandlerContext<
 export type Handler<
   Definition extends RequestDefinition,
   Redirect extends RedirectFunction = RouteRedirect,
+  AllowImplicitResponse extends boolean = false,
 > = (
   context: HandlerContext<Definition, Redirect>,
-) => MaybePromise<DefinedResponse<DefinitionResponse<Definition>> | DefinedRedirect>;
+) => MaybePromise<
+  | DefinedResponse<DefinitionResponse<Definition>>
+  | DefinedRedirect
+  | (AllowImplicitResponse extends true
+    ? Definition extends { response: unknown }
+      ? never
+      : void
+    : never)
+>;
 
 export type CookieMutation =
   | { type: "set"; definition: AnyCookieDefinition; value: unknown }
@@ -287,11 +296,13 @@ export type ExecutedRequest<Definition extends RequestDefinition> =
 export async function executeRequest<
   Definition extends RequestDefinition,
   Redirect extends RedirectFunction = RouteRedirect,
+  AllowImplicitResponse extends boolean = false,
 >(
   definition: Definition,
-  handler: Handler<Definition, Redirect>,
+  handler: Handler<Definition, Redirect, AllowImplicitResponse>,
   rawRequest: RawRequest,
   defaultRedirectStatus = 307,
+  allowImplicitResponse = false as AllowImplicitResponse,
 ): Promise<ExecutedRequest<Definition> | undefined> {
   const [body, query, parsedCookies] = await Promise.all([
     definition.body?.safeParseAsync(rawRequest.body),
@@ -322,7 +333,7 @@ export async function executeRequest<
     })) as unknown as Redirect,
   } as HandlerContext<Definition, Redirect>;
 
-  let result: DefinedResponse<DefinitionResponse<Definition>> | DefinedRedirect;
+  let result: DefinedResponse<DefinitionResponse<Definition>> | DefinedRedirect | void;
 
   try {
     result = await handler(context);
@@ -352,6 +363,14 @@ export async function executeRequest<
       type: "redirect",
       location: result.location,
       status: result.status,
+      cookieMutations,
+    };
+  }
+
+  if (result === undefined && allowImplicitResponse && !("response" in definition)) {
+    return {
+      type: "response",
+      response: undefined as ResponseValue<Definition>,
       cookieMutations,
     };
   }

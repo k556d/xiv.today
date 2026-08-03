@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { getOAuthProviderUrl, oauthProviderSchema } from "@/server/auth-oauth";
 import { cookies } from "@/server/cookie-definitions";
-import { createRouteHandler } from "@/server/route-handler";
+import { createRoute } from "@/server/route";
 
 const signInStartDefinition = {
   body: z.object({
@@ -13,7 +13,7 @@ const signInStartDefinition = {
   },
 } as const;
 
-export const POST = createRouteHandler(signInStartDefinition, async ({ body, cookies, redirect }) => {
+export const POST = createRoute(signInStartDefinition, async ({ body, cookies, redirect }) => {
   const nonce = crypto.randomUUID();
   cookies.authFlow.set({
     intent: "sign-in",

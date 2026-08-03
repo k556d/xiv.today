@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { getOAuthProviderUrl, oauthProviderSchema } from "@/server/auth-oauth";
 import { cookies } from "@/server/cookie-definitions";
-import { createRouteHandler } from "@/server/route-handler";
+import { createRoute } from "@/server/route";
 
 const linkStartDefinition = {
   body: z.object({
@@ -25,7 +25,7 @@ const linkStartDefinition = {
   },
 } as const;
 
-export const POST = createRouteHandler(linkStartDefinition, async ({ body, cookies, errors, redirect }) => {
+export const POST = createRoute(linkStartDefinition, async ({ body, cookies, errors, redirect }) => {
   const session = cookies.session.value;
 
   if (!session) {

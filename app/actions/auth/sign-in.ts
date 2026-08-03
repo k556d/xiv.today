@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { findUserByIdentifier, validatePassword } from "@/server/auth";
 import { cookies } from "@/server/cookie-definitions";
-import { createServerAction } from "@/server/server-action";
+import { createAction } from "@/server/action";
 
 const definition = {
   body: z.object({
@@ -26,12 +26,11 @@ const definition = {
   },
 } as const;
 
-export const signIn = createServerAction(definition, async ({ body, cookies, errors, respond }) => {
+export const signIn = createAction(definition, async ({ body, cookies, errors }) => {
   const user = await findUserByIdentifier(body.identifier);
   if (!user?.passwordHash || !await validatePassword(body.password, user.passwordHash)) {
     throw errors.invalidCredentials();
   }
 
   cookies.session.set({ userId: user.userId, selectedCharacterId: null });
-  return respond();
 });

@@ -6,7 +6,7 @@ import { createPasswordHash } from "@/server/auth";
 import { requireUser } from "@/server/current-user";
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
-import { createServerAction } from "@/server/server-action";
+import { createAction } from "@/server/action";
 
 const definition = {
   body: z.object({
@@ -36,7 +36,7 @@ const definition = {
   },
 } as const;
 
-export const updateCredentials = createServerAction(definition, async ({ body, errors, respond }) => {
+export const updateCredentials = createAction(definition, async ({ body, errors, respond }) => {
   const user = await requireUser();
   const username = body.username || null;
   const password = body.password || null;

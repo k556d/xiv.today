@@ -6,7 +6,7 @@ import { cookies } from "@/server/cookie-definitions";
 import { getCurrentUser } from "@/server/current-user";
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
-import { createServerAction } from "@/server/server-action";
+import { createAction } from "@/server/action";
 
 const definition = {
   body: z.object({
@@ -33,7 +33,7 @@ const definition = {
   },
 } as const;
 
-export const verifyEmailChallenge = createServerAction(definition, async ({ body, cookies, errors, respond }) => {
+export const verifyEmailChallenge = createAction(definition, async ({ body, cookies, errors }) => {
   const challenge = cookies.emailVerification.value;
   const currentUser = await getCurrentUser();
 
@@ -56,5 +56,4 @@ export const verifyEmailChallenge = createServerAction(definition, async ({ body
   const selectedCharacterId = currentUser?.userId === userId ? currentUser.selectedCharacter?.id ?? null : null;
   cookies.session.set({ userId, selectedCharacterId });
   cookies.emailVerification.clear();
-  return respond();
 });

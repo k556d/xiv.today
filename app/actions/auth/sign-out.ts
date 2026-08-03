@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "@/server/cookie-definitions";
-import { createServerAction } from "@/server/server-action";
+import { createAction } from "@/server/action";
 
 const definition = {
   cookies: {
@@ -12,7 +12,6 @@ const definition = {
   },
 } as const;
 
-export const signOut = createServerAction(definition, async ({ cookies, respond }) => {
+export const signOut = createAction(definition, async ({ cookies }) => {
   cookies.session.clear();
-  return respond();
 });
