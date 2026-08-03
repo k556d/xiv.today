@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import AuthProvider from "@/components/AuthProvider";
 import UserMenu from "@/components/UserMenu";
 import styles from "./layout.module.css";
 import "./globals.css";
@@ -20,7 +19,7 @@ export const metadata: Metadata = {
   description: "Track upcoming Final Fantasy XIV community events.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -28,12 +27,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${styles.html}`}>
       <body className={styles.body}>
-        <AuthProvider>
-          <header className={styles.header}>
-            <UserMenu />
-          </header>
-          {children}
-        </AuthProvider>
+        <header className={styles.header}>
+          <UserMenu />
+        </header>
+        {children}
       </body>
     </html>
   );

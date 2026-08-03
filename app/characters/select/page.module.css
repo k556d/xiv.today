@@ -1,0 +1,13 @@
+@reference "tailwindcss";
+
+.page {
+  @apply min-h-screen;
+  @apply px-6 py-10;
+  @apply bg-[#090b16] text-slate-100;
+  @apply sm:px-10 lg:px-16;
+}
+
+.shell {
+  @apply flex w-full max-w-5xl flex-col;
+  @apply mx-auto gap-8;
+}

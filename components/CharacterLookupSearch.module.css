@@ -1,0 +1,435 @@
+.shell {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.formCard {
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 1.5rem;
+  background: rgb(255 255 255 / 6%);
+  padding: 1.5rem;
+  box-shadow: 0 24px 64px rgb(0 0 0 / 35%);
+  backdrop-filter: blur(24px);
+}
+
+.title {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.subtitle {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #94a3b8;
+}
+
+.form {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.input {
+  width: 100%;
+  height: 2.75rem;
+  box-sizing: border-box;
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 0.75rem;
+  background: rgb(2 6 23 / 80%);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  color: #fff;
+  outline: none;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.input::placeholder {
+  color: #64748b;
+}
+
+.input:focus-visible {
+  border-color: rgb(165 243 252 / 50%);
+  box-shadow: 0 0 0 1px rgb(165 243 252 / 100%);
+}
+
+.combobox {
+  position: relative;
+}
+
+.comboboxField {
+  display: flex;
+  align-items: stretch;
+  height: 2.75rem;
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 0.75rem;
+  background: rgb(2 6 23 / 80%);
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.comboboxField:focus-within {
+  border-color: rgb(165 243 252 / 50%);
+  box-shadow: 0 0 0 1px rgb(165 243 252 / 100%);
+}
+
+.comboboxField .input {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  height: 100%;
+}
+
+.comboboxButton {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 0 0.75rem;
+  color: #94a3b8;
+  transition: color 150ms ease;
+}
+
+.comboboxButton:hover {
+  color: #fff;
+}
+
+.options {
+  position: absolute;
+  z-index: 20;
+  margin-top: 0.5rem;
+  max-height: 18rem;
+  width: 100%;
+  overflow: auto;
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 1rem;
+  background: rgb(2 6 23 / 96%);
+  padding: 0.25rem;
+  box-shadow: 0 24px 64px rgb(0 0 0 / 40%);
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-radius: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  color: #e2e8f0;
+  outline: none;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.optionActive {
+  background: rgb(34 211 238 / 12%);
+  color: #fff;
+}
+
+.optionSelected {
+  font-weight: 600;
+  color: #cffafe;
+}
+
+.optionIcon {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  color: #a5f3fc;
+}
+
+.noOptions {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  color: #94a3b8;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.75rem;
+  box-sizing: border-box;
+  border: 1px solid rgb(165 243 252 / 30%);
+  border-radius: 0.75rem;
+  background: #0891b2;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #fff;
+  transition: background-color 150ms ease, opacity 150ms ease;
+}
+
+.button:hover {
+  background: #06b6d4;
+}
+
+.button:disabled {
+  opacity: 0.5;
+}
+
+.error {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: #fca5a5;
+}
+
+.results {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  gap: 0.75rem;
+}
+
+.resultCard {
+  min-width: 0;
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 1rem;
+  background: rgb(2 6 23 / 70%);
+  overflow: hidden;
+}
+
+.resultCardSelected {
+  border-color: rgb(165 243 252 / 35%);
+  box-shadow: 0 0 0 1px rgb(165 243 252 / 20%);
+}
+
+.resultButton {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  text-align: left;
+  min-width: 0;
+  min-height: 4.75rem;
+}
+
+.resultButton:hover {
+  background: rgb(255 255 255 / 3%);
+}
+
+.resultContent {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 1rem;
+}
+
+.resultText {
+  min-width: 0;
+}
+
+.resultCheckIcon {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex-shrink: 0;
+  color: #a5f3fc;
+}
+
+.avatar {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 9999px;
+  background: rgb(255 255 255 / 10%);
+  object-fit: cover;
+}
+
+.resultName {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.resultMeta {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.empty {
+  font-size: 0.875rem;
+  color: #94a3b8;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.backLink {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #a5f3fc;
+  transition: color 150ms ease;
+}
+
+.backLink:hover {
+  color: #cffafe;
+}
+
+.validationCard {
+  border: 1px solid rgb(165 243 252 / 20%);
+  border-radius: 1.5rem;
+  background: rgb(2 6 23 / 85%);
+  padding: 1.5rem;
+}
+
+.validationHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.validationTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.validationSubtitle {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #94a3b8;
+}
+
+.codeBox {
+  margin-top: 1rem;
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 1rem;
+  background: rgb(15 23 42 / 95%);
+  padding: 1rem;
+}
+
+.codeRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.code {
+  display: block;
+  flex: 1 1 16rem;
+  min-width: 0;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  color: #cffafe;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.copyButton {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 1px solid rgb(165 243 252 / 22%);
+  border-radius: 0.75rem;
+  background: rgb(15 23 42 / 95%);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #cffafe;
+  transition: background-color 150ms ease, border-color 150ms ease, opacity 150ms ease;
+}
+
+.copyButton:hover {
+  border-color: rgb(165 243 252 / 40%);
+  background: rgb(30 41 59 / 95%);
+}
+
+.copyButton:disabled {
+  opacity: 0.5;
+}
+
+.copyButtonIcon {
+  width: 0.9rem;
+  height: 0.9rem;
+  flex-shrink: 0;
+}
+
+.verifyButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+  border: 1px solid rgb(165 243 252 / 30%);
+  border-radius: 0.75rem;
+  background: #0891b2;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #fff;
+  transition: background-color 150ms ease, opacity 150ms ease;
+}
+
+.verifyButton:hover {
+  background: #06b6d4;
+}
+
+.verifyButton:disabled {
+  opacity: 0.5;
+}
+
+.skipVerifyButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.75rem;
+  margin-top: 1rem;
+  border: 1px solid rgb(165 243 252 / 18%);
+  border-radius: 0.75rem;
+  background: rgb(15 23 42 / 95%);
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #cffafe;
+  transition: background-color 150ms ease, opacity 150ms ease;
+}
+
+.skipVerifyButton:hover {
+  background: rgb(30 41 59 / 95%);
+}
+
+.skipVerifyButton:disabled {
+  opacity: 0.5;
+}
+
+.verificationResult {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.verificationResultSuccess {
+  color: #86efac;
+}
+
+.verificationResultFailed {
+  color: #fca5a5;
+}
+
+@media (width >= 640px) {
+  .form {
+    grid-template-columns: 1fr 1fr auto;
+  }
+
+  .button {
+    align-self: stretch;
+  }
+}

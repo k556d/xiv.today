@@ -1,138 +1,183 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { register } from "@/server/actions/auth";
-import { useAuth } from "./AuthProvider";
+import { useState } from "react";
+import { FaDiscord, FaUser, FaXmark } from "react-icons/fa6";
+import { FcGoogle } from "react-icons/fc";
+import { register } from "@/app/actions/auth/register";
+import { sendEmailChallenge } from "@/app/actions/auth/send-email-challenge";
+import { signIn } from "@/app/actions/auth/sign-in";
+import { verifyEmailChallenge } from "@/app/actions/auth/verify-email-challenge";
 import styles from "./LoginModal.module.css";
 
-type Mode = "choose" | "login" | "register";
+const messages = {
+  codeInvalid: "Invalid or expired code.",
+  codeSendFailed: "Could not send a code.",
+  codeVerificationFailed: "Could not verify the code.",
+  continueFailed: "Could not continue.",
+} as const;
 
-export default function LoginModal({ onClose }: { onClose: () => void }) {
+type Mode = "choose" | "credentials" | "register" | "email" | "email-code";
+type EmailPurpose = "sign-in" | "sign-up";
+
+export default function LoginModal({
+  initialError = "",
+  onClose,
+  returnTo,
+}: {
+  initialError?: string;
+  onClose: () => void;
+  returnTo?: string;
+}) {
   const [mode, setMode] = useState<Mode>("choose");
-  const [error, setError] = useState("");
+  const [emailPurpose, setEmailPurpose] = useState<EmailPurpose>("sign-in");
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState(initialError);
   const [loading, setLoading] = useState(false);
-  const { refresh } = useAuth();
 
-  const handleCredentialsSubmit = useCallback(
-    async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      setError("");
-      setLoading(true);
+  async function submitCredentials(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError("");
+    setLoading(true);
 
-      const form = new FormData(e.currentTarget);
+    try {
+      const result = await (mode === "register" ? register : signIn)(new FormData(event.currentTarget));
 
-      try {
-        if (mode === "register") {
-          const result = await register(form);
-          if (!result.success) {
-            setError(result.error);
-            setLoading(false);
-            return;
-          }
-        }
-
-        const res = await fetch("/api/auth/credentials", {
-          method: "POST",
-          body: form,
-        });
-
-        if (!res.ok) {
-          setError(
-            mode === "register"
-              ? "Account created but login failed. Try signing in."
-              : "Invalid username or password.",
-          );
-          if (mode === "register") setMode("login");
-        } else {
-          await refresh();
-          onClose();
-        }
-      } catch {
-        setError("Something went wrong. Please try again.");
-      } finally {
-        setLoading(false);
+      if (result?.error) {
+        setError(result.error.message);
+        return;
       }
-    },
-    [mode, onClose, refresh],
-  );
+
+      onClose();
+    } catch {
+      setError(messages.continueFailed);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function submitEmail(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const result = await sendEmailChallenge({ email, purpose: emailPurpose });
+
+      if (result?.error) {
+        setError(result.error.message);
+        return;
+      }
+
+      setMode("email-code");
+    } catch {
+      setError(messages.codeSendFailed);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function verifyEmailCode(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const code = new FormData(event.currentTarget).get("code");
+      const result = await verifyEmailChallenge({ code: typeof code === "string" ? code : "" });
+
+      if (result?.error) {
+        setError(result.error.message);
+        return;
+      }
+
+      onClose();
+    } catch {
+      setError(messages.codeVerificationFailed);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function setOAuthReturnTo(event: React.FormEvent<HTMLFormElement>) {
+    const input = event.currentTarget.querySelector<HTMLInputElement>("input[name=returnTo]");
+
+    if (input) {
+      input.value = returnTo ?? `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    }
+  }
 
   return (
-    <div
-      className={styles.overlay}
-      onClick={onClose}
-    >
-      <div
-        className={styles.panel}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button
-          onClick={onClose}
-          className={styles.closeButton}
-          aria-label="Close"
-        >
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-            <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
-          </svg>
+    <div className={styles.overlay} onClick={onClose}>
+      <div className={styles.panel} onClick={(event) => event.stopPropagation()}>
+        <button onClick={onClose} className={styles.closeButton} aria-label="Close">
+          <FaXmark aria-hidden="true" />
         </button>
 
         <h2 className={styles.title}>
-          {mode === "choose" && "Sign in to xiv.today"}
-          {mode === "login" && "Sign in with username"}
-          {mode === "register" && "Create an account"}
+          {mode === "choose" && "Welcome to xiv.today"}
+          {mode === "credentials" && "Sign in"}
+          {mode === "register" && "Create account"}
+          {mode === "email" && (emailPurpose === "sign-in" ? "Sign in with email" : "Create account with email")}
+          {mode === "email-code" && "Enter your code"}
         </h2>
 
-        {mode === "choose" && (
+        {mode === "choose" ? (
           <div className={styles.choiceStack}>
-            <button
-              onClick={() => setMode("login")}
-              className={styles.choiceButton}
-            >
-              <UserIcon />
-              Continue with username
+            {error ? <p className={styles.error}>{error}</p> : null}
+            <button onClick={() => setMode("credentials")} className={styles.choiceButton}>
+              <FaUser aria-hidden="true" />
+              Continue with password
             </button>
             <button
               onClick={() => {
-                const returnTo = `${window.location.pathname}${window.location.search}${window.location.hash}`;
-                window.location.assign(
-                  `/api/auth/discord/start?returnTo=${encodeURIComponent(returnTo)}`,
-                );
+                setEmailPurpose("sign-in");
+                setMode("email");
               }}
-              className={`${styles.choiceButton} ${styles.choiceButtonDiscord}`}
+              className={styles.choiceButton}
             >
-              <DiscordIcon />
-              Continue with Discord
+              Continue with email code
+            </button>
+            <form className={styles.choiceForm} action="/api/auth/sign-in/start" method="post" onSubmit={setOAuthReturnTo}>
+              <input name="provider" type="hidden" value="discord" />
+              <input name="returnTo" type="hidden" />
+              <button className={`${styles.choiceButton} ${styles.choiceButtonDiscord}`} type="submit">
+                <FaDiscord aria-hidden="true" />
+                Continue with Discord
+              </button>
+            </form>
+            <form className={styles.choiceForm} action="/api/auth/sign-in/start" method="post" onSubmit={setOAuthReturnTo}>
+              <input name="provider" type="hidden" value="google" />
+              <input name="returnTo" type="hidden" />
+              <button className={styles.choiceButton} type="submit">
+                <FcGoogle aria-hidden="true" />
+                Continue with Google
+              </button>
+            </form>
+            <button onClick={() => setMode("register")} className={styles.helpButton}>
+              Create a new account
             </button>
           </div>
-        )}
+        ) : null}
 
-        {(mode === "login" || mode === "register") && (
-          <form onSubmit={handleCredentialsSubmit} className={styles.form}>
+        {mode === "credentials" || mode === "register" ? (
+          <form onSubmit={submitCredentials} className={styles.form}>
             <div>
-              <label
-                htmlFor="username"
-                className={styles.label}
-              >
-                Username
+              <label htmlFor="identifier" className={styles.label}>
+                {mode === "register" ? "Username" : "Username or email"}
               </label>
               <input
-                id="username"
-                name="username"
+                id="identifier"
+                name={mode === "register" ? "username" : "identifier"}
                 type="text"
                 required
                 minLength={2}
-                maxLength={32}
-                autoComplete="username"
+                maxLength={320}
+                autoComplete={mode === "register" ? "username" : "username"}
                 className={styles.input}
-                placeholder="Enter your username"
               />
             </div>
             <div>
-              <label
-                htmlFor="password"
-                className={styles.label}
-              >
-                Password
-              </label>
+              <label htmlFor="password" className={styles.label}>Password</label>
               <input
                 id="password"
                 name="password"
@@ -141,104 +186,73 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
                 minLength={8}
                 autoComplete={mode === "register" ? "new-password" : "current-password"}
                 className={styles.input}
-                placeholder={mode === "register" ? "At least 8 characters" : "Enter your password"}
               />
             </div>
-
-            {error && (
-              <p className={styles.error}>{error}</p>
-            )}
-
-            <button
-              type="submit"
-              disabled={loading}
-              className={styles.submitButton}
-            >
-              {loading
-                ? "Please wait…"
-                : mode === "register"
-                  ? "Create account"
-                  : "Sign in"}
+            {error ? <p className={styles.error}>{error}</p> : null}
+            <button type="submit" disabled={loading} className={styles.submitButton}>
+              {loading ? "Please wait..." : mode === "register" ? "Create account" : "Sign in"}
             </button>
-
-            <p className={styles.helpText}>
-              {mode === "login" ? (
-                <>
-                  No account?{" "}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setMode("register");
-                      setError("");
-                    }}
-                    className={styles.helpButton}
-                  >
-                    Create one
-                  </button>
-                </>
-              ) : (
-                <>
-                  Already have an account?{" "}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setMode("login");
-                      setError("");
-                    }}
-                    className={styles.helpButton}
-                  >
-                    Sign in
-                  </button>
-                </>
-              )}
-            </p>
-
             <button
               type="button"
               onClick={() => {
-                setMode("choose");
+                setEmailPurpose("sign-up");
+                setMode("email");
                 setError("");
               }}
-              className={styles.backButton}
+              className={styles.helpButton}
             >
-              ← Other sign-in options
+              Create account with email instead
             </button>
           </form>
-        )}
+        ) : null}
+
+        {mode === "email" ? (
+          <form onSubmit={submitEmail} className={styles.form}>
+            <div>
+              <label htmlFor="email" className={styles.label}>Email address</label>
+              <input
+                id="email"
+                type="email"
+                required
+                autoComplete="email"
+                className={styles.input}
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+              />
+            </div>
+            {error ? <p className={styles.error}>{error}</p> : null}
+            <button type="submit" disabled={loading} className={styles.submitButton}>
+              {loading ? "Sending..." : "Send code"}
+            </button>
+          </form>
+        ) : null}
+
+        {mode === "email-code" ? (
+          <form onSubmit={verifyEmailCode} className={styles.form}>
+            <div>
+              <label htmlFor="code" className={styles.label}>Code</label>
+              <input id="code" name="code" required inputMode="numeric" autoComplete="one-time-code" className={styles.input} />
+            </div>
+            {error ? <p className={styles.error}>{error}</p> : null}
+            <button type="submit" disabled={loading} className={styles.submitButton}>
+              {loading ? "Verifying..." : "Verify code"}
+            </button>
+          </form>
+        ) : null}
+
+        {mode !== "choose" ? (
+          <button
+            type="button"
+            onClick={() => {
+              setMode("choose");
+              setError("");
+            }}
+            className={styles.backButton}
+          >
+            Back
+          </button>
+        ) : null}
       </div>
     </div>
-  );
-}
-
-function UserIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-      <circle cx="12" cy="7" r="4" />
-    </svg>
-  );
-}
-
-function DiscordIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.947 2.418-2.157 2.418z" />
-    </svg>
   );
 }

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { db } from "@/server/db";
-import { events } from "@/server/db/schema";
+import CharacterSelectLink from "@/components/CharacterSelectLink";
 import styles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
@@ -28,6 +28,9 @@ export default async function Home() {
             A simple home base for keeping track of notable Final Fantasy XIV
             community events, tournaments, conventions, and fan gatherings.
           </p>
+          <div>
+            <CharacterSelectLink />
+          </div>
         </section>
 
         <section aria-labelledby="upcoming-events" className={styles.section}>
@@ -60,7 +63,7 @@ export default async function Home() {
                           {event.date}
                         </p>
                         <p className={styles.eventOrganizer}>
-                          {event.organizer?.username ?? event.organizerId}
+                          {event.organizer?.name ?? event.organizerId}
                         </p>
                       </div>
                       <div>

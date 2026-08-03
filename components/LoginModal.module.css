@@ -39,6 +39,11 @@
   @apply gap-3;
 }
 
+.choiceForm,
+.choiceForm .choiceButton {
+  @apply w-full;
+}
+
 .choiceButton {
   @apply flex items-center justify-center;
   @apply gap-2 px-4 py-3;

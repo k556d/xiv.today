@@ -1,0 +1,172 @@
+@reference "tailwindcss";
+
+.shell {
+  @apply flex flex-col;
+  @apply gap-6;
+}
+
+.hero {
+  @apply flex items-center;
+  @apply gap-4 p-6;
+  @apply border rounded-[2rem] border-white/10;
+  @apply bg-white/6;
+  @apply shadow-2xl shadow-indigo-950/30 backdrop-blur;
+}
+
+.avatar {
+  @apply h-16 w-16 flex-shrink-0 object-cover;
+  @apply rounded-full;
+  @apply bg-slate-800;
+}
+
+.kicker {
+  @apply text-xs font-semibold uppercase tracking-[0.3em];
+  @apply text-cyan-200;
+}
+
+.title {
+  @apply mt-1;
+  @apply text-3xl font-bold;
+  @apply text-white;
+}
+
+.subtitle {
+  @apply mt-1;
+  @apply text-sm;
+  @apply text-slate-400;
+}
+
+.card {
+  @apply p-6;
+  @apply border rounded-3xl border-white/10;
+  @apply bg-slate-950/70;
+}
+
+.cardHeader {
+  @apply flex flex-col;
+  @apply gap-3;
+  @apply sm:flex-row sm:items-start sm:justify-between;
+}
+
+.cardTitle {
+  @apply text-xl font-bold;
+  @apply text-white;
+}
+
+.cardDescription {
+  @apply max-w-2xl;
+  @apply mt-2;
+  @apply text-sm leading-6;
+  @apply text-slate-400;
+}
+
+.statusReady,
+.statusEmpty {
+  @apply inline-flex w-fit items-center;
+  @apply px-3 py-1;
+  @apply rounded-full;
+  @apply text-xs font-semibold;
+}
+
+.statusReady {
+  @apply border border-emerald-300/30;
+  @apply bg-emerald-300/10 text-emerald-200;
+}
+
+.statusEmpty {
+  @apply border border-white/10;
+  @apply bg-white/6 text-slate-300;
+}
+
+.form {
+  @apply grid;
+  @apply mt-6 gap-3;
+}
+
+.label {
+  @apply text-xs font-semibold uppercase tracking-[0.12em];
+  @apply text-slate-400;
+}
+
+.input {
+  @apply h-11 w-full;
+  @apply px-3;
+  @apply border rounded-xl border-white/10 outline-none;
+  @apply text-sm;
+  @apply bg-white/6 text-white;
+  @apply transition;
+}
+
+.input::placeholder {
+  @apply text-slate-500;
+}
+
+.input:focus-visible {
+  @apply border-cyan-200/50 ring-1 ring-cyan-200;
+}
+
+.error {
+  @apply text-sm;
+  @apply text-red-300;
+}
+
+.success {
+  @apply text-sm;
+  @apply text-emerald-300;
+}
+
+.submitButton {
+  @apply inline-flex h-11 w-fit items-center justify-center;
+  @apply mt-2 px-4;
+  @apply rounded-xl;
+  @apply text-sm font-semibold;
+  @apply bg-cyan-600 text-white;
+  @apply transition;
+}
+
+.submitButton:hover {
+  @apply bg-cyan-500;
+}
+
+.submitButton:disabled {
+  @apply opacity-50;
+}
+
+.cancelButton {
+  @apply w-fit;
+  @apply text-sm font-semibold;
+  @apply text-slate-400;
+}
+
+.cancelButton:hover {
+  @apply text-slate-200;
+}
+
+.providerList {
+  @apply grid;
+  @apply mt-6 gap-3;
+  @apply sm:grid-cols-2;
+}
+
+.providerForm,
+.providerForm .providerButton {
+  @apply w-full;
+}
+
+.providerButton {
+  @apply flex items-center justify-center;
+  @apply gap-2 px-4 py-3;
+  @apply border rounded-xl border-white/10;
+  @apply text-sm font-semibold;
+  @apply bg-white/6 text-cyan-100;
+  @apply transition;
+}
+
+.providerButton:hover {
+  @apply border-cyan-200/50;
+  @apply bg-cyan-200/10;
+}
+
+.providerButton:focus-visible {
+  @apply outline-2 outline-offset-2 outline-cyan-200;
+}

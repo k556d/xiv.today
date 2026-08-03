@@ -1,0 +1,15 @@
+@reference "tailwindcss";
+
+.button {
+  @apply inline-flex items-center;
+  @apply gap-2 mt-8 px-4 py-2;
+  @apply border rounded-full border-cyan-200/30;
+  @apply text-sm font-semibold;
+  @apply bg-cyan-600 text-white;
+  @apply transition;
+  @apply hover:bg-cyan-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-200;
+}
+
+.icon {
+  @apply h-4 w-4;
+}

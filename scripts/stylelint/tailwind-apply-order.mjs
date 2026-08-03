@@ -131,5 +131,10 @@ function rule(primaryOption, _secondaryOptions, context) {
   };
 }
 
+rule.meta = {
+  fixable: true,
+  url: "https://github.com/k556d/xiv.today/blob/main/scripts/stylelint/tailwind-apply-order.mjs",
+};
+
 export default stylelint.createPlugin(ruleName, rule);
 export { messages, ruleName };

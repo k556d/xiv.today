@@ -2,26 +2,42 @@ import { defineRelations } from "drizzle-orm";
 import * as schema from "./schema";
 
 export const relations = defineRelations(schema, (r) => ({
+  worlds: {
+    characters: r.many.characters({
+      from: r.worlds.name,
+      to: r.characters.worldName,
+    }),
+  },
   users: {
-    authAccounts: r.many.authAccounts({
+    characters: r.many.characters({
       from: r.users.id,
-      to: r.authAccounts.userId,
+      to: r.characters.userId,
+    }),
+    linkedAccounts: r.many.linkedAccounts({
+      from: r.users.id,
+      to: r.linkedAccounts.userId,
+    }),
+  },
+  characters: {
+    user: r.one.users({
+      from: r.characters.userId,
+      to: r.users.id,
     }),
     events: r.many.events({
-      from: r.users.id,
+      from: r.characters.id,
       to: r.events.organizerId,
     }),
   },
-  authAccounts: {
+  linkedAccounts: {
     user: r.one.users({
-      from: r.authAccounts.userId,
+      from: r.linkedAccounts.userId,
       to: r.users.id,
     }),
   },
   events: {
-    organizer: r.one.users({
+    organizer: r.one.characters({
       from: r.events.organizerId,
-      to: r.users.id,
+      to: r.characters.id,
     }),
   },
 }));
