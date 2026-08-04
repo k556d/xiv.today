@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { getOAuthProviderUrl, oauthProviderSchema } from "@/server/auth-oauth";
 import { cookies } from "@/server/cookie-definitions";
-import { defineRoute } from "@xiv-today/next-request/route";
+import { defineRoute } from "@xiv-today/next-request";
 
-const signInStartDefinition = defineRoute({
+export const POST = defineRoute({
   body: z.object({
     provider: oauthProviderSchema,
     returnTo: z.string().default("/"),
@@ -11,18 +11,17 @@ const signInStartDefinition = defineRoute({
   cookies: {
     authFlow: { cookie: cookies.authFlow, access: "write" },
   },
-});
-
-export const POST = signInStartDefinition.handle(({ body, cookies, redirect }) => {
-  const nonce = crypto.randomUUID();
-  cookies.authFlow.set({
-    intent: "sign-in",
-    nonce,
-    returnTo: body.returnTo,
-  });
-  return redirect(getOAuthProviderUrl(
-    body.provider,
-    "/api/auth/sign-in/callback",
-    nonce,
-  ), 303);
+  handler: ({ body, cookies, redirect }) => {
+    const nonce = crypto.randomUUID();
+    cookies.authFlow.set({
+      intent: "sign-in",
+      nonce,
+      returnTo: body.returnTo,
+    });
+    return redirect(getOAuthProviderUrl(
+      body.provider,
+      "/api/auth/sign-in/callback",
+      nonce,
+    ), 303);
+  },
 });

@@ -4,9 +4,9 @@ import { z } from "zod";
 import { cookies } from "@/server/cookie-definitions";
 import { requireUser } from "@/server/current-user";
 import { userOwnsCharacter } from "@/server/db/characters";
-import { defineAction } from "@xiv-today/next-request/action";
+import { defineAction } from "@xiv-today/next-request";
 
-const definition = defineAction({
+export const selectCharacter = defineAction({
   body: z.object({
     characterId: z.string().trim().min(1).nullable(),
   }),
@@ -18,23 +18,20 @@ const definition = defineAction({
   },
   errors: {
     characterNotFound: {
-      error: {
-        code: "character-not-found",
-        message: "Character not found.",
-      },
+      code: "character-not-found",
+      message: "Character not found.",
     },
   },
-});
+  handler: async ({ body, cookies, errors }) => {
+    const user = await requireUser();
+    const { characterId } = body;
 
-export const selectCharacter = definition.handle(async ({ body, cookies, errors }) => {
-  const user = await requireUser();
-  const { characterId } = body;
-
-  if (characterId) {
-    if (!await userOwnsCharacter(user.userId, characterId)) {
-      throw errors.characterNotFound();
+    if (characterId) {
+      if (!await userOwnsCharacter(user.userId, characterId)) {
+        throw errors.characterNotFound();
+      }
     }
-  }
 
-  cookies.session.set({ userId: user.userId, selectedCharacterId: characterId });
+    cookies.session.set({ userId: user.userId, selectedCharacterId: characterId });
+  },
 });

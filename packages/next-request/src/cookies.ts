@@ -1,67 +1,97 @@
-import { add, type Duration } from "date-fns";
-import { z } from "zod";
-
-export type CookieOptions = {
-  domain?: string;
-  httpOnly?: boolean;
-  partitioned?: boolean;
-  path?: string;
-  priority?: "low" | "medium" | "high";
-  sameSite?: boolean | "lax" | "strict" | "none";
-  secure?: boolean;
-};
-
-export type CookieDefinition<Schema extends z.ZodType = z.ZodType> = {
-  name: string;
-  schema: Schema;
-  duration?: Duration;
-  options: CookieOptions;
-  deserialize(value: string): unknown | Promise<unknown>;
-  serialize(value: z.output<Schema>, expires: Date | undefined): string | Promise<string>;
-};
+import { add } from "date-fns";
+import { cookies as getRequestCookies } from "next/headers";
+import { type z } from "zod";
+import type * as types from "./typings";
 
 export function defineCookie<Schema extends z.ZodType>({
   options,
   ...definition
-}: Omit<CookieDefinition<Schema>, "options"> & { options?: CookieOptions }): CookieDefinition<Schema> {
+}: types.CookieDefinition<Schema>): types.Cookie<z.output<Schema>> {
+  const cookieOptions: types.CookieOptions = {
+    httpOnly: true,
+    path: "/",
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    ...options,
+  };
+
   return {
-    ...definition,
-    options: {
-      httpOnly: true,
-      path: "/",
-      sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
-      ...options,
+    name: definition.name,
+    async get(store) {
+      const value = store.get(definition.name)?.value;
+
+      if (value === undefined) {
+        return undefined;
+      }
+
+      return definition.schema.parseAsync(await definition.deserialize(value));
+    },
+    async set(store, value) {
+      const expires = definition.duration && add(new Date(), definition.duration);
+      store.set({
+        ...cookieOptions,
+        name: definition.name,
+        value: await definition.serialize(value, expires),
+        expires,
+      });
+    },
+    clear(store) {
+      store.set({
+        ...cookieOptions,
+        name: definition.name,
+        value: "",
+        expires: new Date(0),
+      });
     },
   };
 }
 
-export async function deserializeCookie<Schema extends z.ZodType>(
-  definition: CookieDefinition<Schema>,
-  value: string,
-): Promise<z.output<Schema>> {
-  return definition.schema.parseAsync(await definition.deserialize(value));
-}
+export async function createRequestCookies<Bindings extends types.CookieBindings | undefined>(bindings: Bindings) {
+  const cookieStore = await getRequestCookies();
+  const entries = Object.entries(bindings ?? {}) as [string, types.CookieBinding][];
+  const mutations = new Map<object, types.CookieMutation>();
+  const cookies: Record<string, unknown> = {};
 
-export async function serializeCookie<Schema extends z.ZodType>(
-  definition: CookieDefinition<Schema>,
-  value: z.output<Schema>,
-) {
-  const expires = definition.duration && add(new Date(), definition.duration);
+  for (const [name, binding] of entries) {
+    let value: unknown;
+
+    if (binding.access !== "write") {
+      value = await binding.cookie.get(cookieStore);
+      if (value === undefined && !binding.optional) {
+        return undefined;
+      }
+    }
+
+    cookies[name] = {
+      ...(binding.access !== "write" ? { value } : {}),
+      ...(binding.access !== "read" ? {
+        set: (nextValue: unknown) => {
+          mutations.set(binding.cookie, {
+            type: "set",
+            cookie: binding.cookie,
+            value: nextValue,
+          });
+        },
+        clear: () => {
+          mutations.set(binding.cookie, {
+            type: "clear",
+            cookie: binding.cookie,
+          });
+        },
+      } : {}),
+    };
+  }
 
   return {
-    ...definition.options,
-    name: definition.name,
-    value: await definition.serialize(value, expires),
-    expires,
-  };
-}
-
-export function clearCookie(definition: CookieDefinition) {
-  return {
-    ...definition.options,
-    name: definition.name,
-    value: "",
-    expires: new Date(0),
+    cookies: cookies as types.CookieHandles<Bindings>,
+    async commit() {
+      for (const mutation of mutations.values()) {
+        if (mutation.type === "set") {
+          await mutation.cookie.set(cookieStore, mutation.value);
+        } else {
+          mutation.cookie.clear(cookieStore);
+        }
+      }
+    },
   };
 }

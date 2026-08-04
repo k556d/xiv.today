@@ -4,9 +4,9 @@ import { z } from "zod";
 import { validatePassword } from "@/server/auth";
 import { cookies } from "@/server/cookie-definitions";
 import { findUserByIdentifier } from "@/server/db/users";
-import { defineAction } from "@xiv-today/next-request/action";
+import { defineAction } from "@xiv-today/next-request";
 
-const definition = defineAction({
+export const signIn = defineAction({
   body: z.object({
     identifier: z.string().trim().toLowerCase().min(1).max(320),
     password: z.string().min(1),
@@ -19,19 +19,16 @@ const definition = defineAction({
   },
   errors: {
     invalidCredentials: {
-      error: {
-        code: "invalid-credentials",
-        message: "Invalid username or password.",
-      },
+      code: "invalid-credentials",
+      message: "Invalid username or password.",
     },
   },
-});
+  handler: async ({ body, cookies, errors }) => {
+    const user = await findUserByIdentifier(body.identifier);
+    if (!user?.passwordHash || !await validatePassword(body.password, user.passwordHash)) {
+      throw errors.invalidCredentials();
+    }
 
-export const signIn = definition.handle(async ({ body, cookies, errors }) => {
-  const user = await findUserByIdentifier(body.identifier);
-  if (!user?.passwordHash || !await validatePassword(body.password, user.passwordHash)) {
-    throw errors.invalidCredentials();
-  }
-
-  cookies.session.set({ userId: user.id, selectedCharacterId: null });
+    cookies.session.set({ userId: user.id, selectedCharacterId: null });
+  },
 });
