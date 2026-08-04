@@ -1,17 +1,16 @@
 "use server";
 
 import { cookies } from "@/server/cookie-definitions";
-import { defineAction } from "@xiv-today/next-request/action";
+import { defineAction } from "@xiv-today/next-request";
 
-const definition = defineAction({
+export const signOut = defineAction({
   cookies: {
     session: {
       cookie: cookies.session,
       access: "write",
     },
   },
-});
-
-export const signOut = definition.handle(({ cookies }) => {
-  cookies.session.clear();
+  handler: ({ cookies }) => {
+    cookies.session.clear();
+  },
 });

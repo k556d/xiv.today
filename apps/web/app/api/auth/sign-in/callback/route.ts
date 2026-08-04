@@ -3,9 +3,9 @@ import { cookies } from "@/server/cookie-definitions";
 import { requireOAuthUser } from "@/server/linked-auth";
 import { getAuthErrorUrl, getReturnToUrl } from "@/server/oauth/callback";
 import { verifyOAuthResult } from "@/server/oauth/result";
-import { defineRoute } from "@xiv-today/next-request/route";
+import { defineRoute } from "@xiv-today/next-request";
 
-const signInCallbackDefinition = defineRoute({
+export const GET = defineRoute({
   query: z.object({
     result: z.string(),
   }),
@@ -13,31 +13,30 @@ const signInCallbackDefinition = defineRoute({
     authFlow: { cookie: cookies.authFlow, access: "read-write" },
     session: { cookie: cookies.session, access: "write" },
   },
-});
+  handler: async ({ query, cookies, redirect }) => {
+    const flow = cookies.authFlow.value;
+    const resultToken = query.result;
+    cookies.authFlow.clear();
 
-export const GET = signInCallbackDefinition.handle(async ({ query, cookies, redirect }) => {
-  const flow = cookies.authFlow.value;
-  const resultToken = query.result;
-  cookies.authFlow.clear();
-
-  if (flow.intent !== "sign-in") {
-    return redirect(getAuthErrorUrl(flow.returnTo, "oauth-expired"));
-  }
-
-  const result = await verifyOAuthResult(resultToken);
-  if (result.nonce !== flow.nonce) {
-    return redirect(getAuthErrorUrl(flow.returnTo, "oauth-expired"));
-  }
-
-  if (result.type === "error") {
-    if (result.error === "oauth-cancelled") {
-      return redirect(getAuthErrorUrl(flow.returnTo, "oauth-cancelled"));
+    if (flow.intent !== "sign-in") {
+      return redirect(getAuthErrorUrl(flow.returnTo, "oauth-expired"));
     }
 
-    return redirect(getAuthErrorUrl(flow.returnTo, "oauth-expired"));
-  }
+    const result = await verifyOAuthResult(resultToken);
+    if (result.nonce !== flow.nonce) {
+      return redirect(getAuthErrorUrl(flow.returnTo, "oauth-expired"));
+    }
 
-  const userId = await requireOAuthUser(result);
-  cookies.session.set({ userId, selectedCharacterId: null });
-  return redirect(getReturnToUrl(flow.returnTo));
+    if (result.type === "error") {
+      if (result.error === "oauth-cancelled") {
+        return redirect(getAuthErrorUrl(flow.returnTo, "oauth-cancelled"));
+      }
+
+      return redirect(getAuthErrorUrl(flow.returnTo, "oauth-expired"));
+    }
+
+    const userId = await requireOAuthUser(result);
+    cookies.session.set({ userId, selectedCharacterId: null });
+    return redirect(getReturnToUrl(flow.returnTo));
+  },
 });

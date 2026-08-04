@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { getOAuthProviderUrl, oauthProviderSchema } from "@/server/auth-oauth";
 import { cookies } from "@/server/cookie-definitions";
-import { defineRoute } from "@xiv-today/next-request/route";
+import { defineRoute } from "@xiv-today/next-request";
 
-const linkStartDefinition = defineRoute({
+export const POST = defineRoute({
   body: z.object({
     provider: oauthProviderSchema,
     returnTo: z.string().default("/settings/login-methods"),
@@ -15,33 +15,28 @@ const linkStartDefinition = defineRoute({
   errors: {
     signInFirst: {
       status: 401,
-      body: {
-        error: {
-          code: "sign-in-first",
-          message: "Sign in first.",
-        },
-      },
+      code: "sign-in-first",
+      message: "Sign in first.",
     },
   },
-});
+  handler: ({ body, cookies, errors, redirect }) => {
+    const session = cookies.session.value;
 
-export const POST = linkStartDefinition.handle(({ body, cookies, errors, redirect }) => {
-  const session = cookies.session.value;
+    if (!session) {
+      throw errors.signInFirst();
+    }
 
-  if (!session) {
-    throw errors.signInFirst();
-  }
-
-  const nonce = crypto.randomUUID();
-  cookies.authFlow.set({
-    intent: "link",
-    nonce,
-    returnTo: body.returnTo,
-    userId: session.userId,
-  });
-  return redirect(getOAuthProviderUrl(
-    body.provider,
-    "/api/auth/link/callback",
-    nonce,
-  ), 303);
+    const nonce = crypto.randomUUID();
+    cookies.authFlow.set({
+      intent: "link",
+      nonce,
+      returnTo: body.returnTo,
+      userId: session.userId,
+    });
+    return redirect(getOAuthProviderUrl(
+      body.provider,
+      "/api/auth/link/callback",
+      nonce,
+    ), 303);
+  },
 });

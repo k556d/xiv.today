@@ -1,17 +1,16 @@
 "use server";
 
 import { cookies } from "@/server/cookie-definitions";
-import { defineAction } from "@xiv-today/next-request/action";
+import { defineAction } from "@xiv-today/next-request";
 
-const definition = defineAction({
+export const cancelEmailChallenge = defineAction({
   cookies: {
     emailVerification: {
       cookie: cookies.emailVerification,
       access: "write",
     },
   },
-});
-
-export const cancelEmailChallenge = definition.handle(({ cookies }) => {
-  cookies.emailVerification.clear();
+  handler: ({ cookies }) => {
+    cookies.emailVerification.clear();
+  },
 });

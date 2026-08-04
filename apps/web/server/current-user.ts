@@ -1,7 +1,6 @@
 import { cache } from "react";
 import { cookies as getRequestCookies } from "next/headers";
 import { unauthorized } from "next/navigation";
-import { deserializeCookie } from "@xiv-today/next-request/cookies";
 import { cookies } from "@/server/cookie-definitions";
 import { findCharactersByUserId } from "@/server/db/characters";
 import { findUserById } from "@/server/db/users";
@@ -40,15 +39,9 @@ export async function getCurrentUserForSession(userId: string, selectedCharacter
 
 export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
   const cookieStore = await getRequestCookies();
-  const sessionValue = cookieStore.get(cookies.session.name)?.value;
+  const session = await cookies.session.get(cookieStore);
 
-  if (!sessionValue) {
-    return null;
-  }
-
-  const session = await deserializeCookie(cookies.session, sessionValue);
-
-  return getCurrentUserForSession(session.userId, session.selectedCharacterId);
+  return session ? getCurrentUserForSession(session.userId, session.selectedCharacterId) : null;
 });
 
 export async function requireUser() {
